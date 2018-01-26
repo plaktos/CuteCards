@@ -2,7 +2,7 @@
 
 This project is meant to develop a Flashcard program using Qt5.10.
 
-It reads .deck files from the res folder, which are JSON documents formatted in a specific way.
+It takes .deck files which are JSON documents formatted in a specific way.
 
 # How do I format the .deck file
 
