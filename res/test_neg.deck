@@ -1,0 +1,23 @@
+{
+    "Properties": {
+        "Title" : "Test deck (negative)"
+    },
+    "Words": {
+        "1" : 
+            ["english","apple"],
+            ["chinese","苹果"],
+            ["pinyin","pingguo"]
+        ],
+
+        "2" : [
+            ["english","table"],
+            ["chinese","桌子"],
+            ["pinyin","zhuozi"]
+        ],
+		
+		"3" : [
+            ["english","table"],
+            ["hungarian","asztal"]
+        ]
+    }
+}

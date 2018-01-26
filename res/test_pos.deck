@@ -1,0 +1,11 @@
+{
+    "Properties": {
+        "Title" : "Test deck (positive)",
+		"Languages" : ["english","chinese","pinyin"]
+    },
+    "Words": [
+		["apple","苹果","ping2 guo3"],
+		["table","桌子","zhuo1 zi0"],
+		["fire","火","huo3"]
+    ]
+}
