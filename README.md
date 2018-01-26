@@ -12,40 +12,26 @@ Here is an example, taken from *test_pos.deck*, see below, for explanation
 ```
 {
     "Properties": {
-        "Title" : "Elementary 1"
+        "Title" : "Test deck (positive)",
+		"Languages" : ["english","chinese","pinyin"]
     },
-    "Words": {
-        "1" : [
-            ["english","apple"],
-            ["chinese","苹果"],
-            ["pinyin","ping2 guo3"]
-        ],
-
-        "2" : [
-            ["english","table"],
-            ["chinese","桌子"],
-            ["pinyin","zhuo1 zi0"]
-        ],
-		
-		"3" : [
-            ["english","table"],
-            ["hungarian","asztal"]
-        ]
-    }
+    "Words": [
+		["apple","苹果","ping2 guo3"],
+		["table","桌子","zhuo1 zi0"],
+		["fire","火","huo3"]
+    ]
 }
 ```
 
 Every .deck file should contain exactly 2 objects (aside from the root).
 These are with the respective keys `Properties` and `Words`.
 The JSON Object `Properties` contains information about the deck itself.
-The JSON Object `Words` contain the actual words, the JSON Objects with numbers
-will be converted into `CF::Flashcard objects`, which contain `CF::Words`,
-created from the JSON Arrays the numbered keys point to.
-Each `CF::Flashcard` object can contain any number of `CF::Words` inside them.
-`CF::Words` are made up of a language and word pair.
+The JSON Object `Words` contains the actual JSON Array.
+Inside this JSON Array are more arrays, each one corresponding to a word.
+These get turned into Flashcard objects, which are read into a Deck.
 
-Flashcards are designed this way, to provide support for languages such as Chinese,
-that require more than 2 words.
+Flashcards are designed this way, to provide support for languages that require more than 2 words.
+Such as chinese.
 
 # How do I build this?
 
@@ -58,39 +44,7 @@ alternatively get the Qt Editor: [Qt Editor](https://www.qt.io/download-qt-insta
 ## To build
 
 Open the CuteCards.pro file in **Qt Editor**.
-
-Under **Build Steps** add **Build Step -> Custom Process Step** 
-add two of them.
-
-##### Unix:
-
-1
-* Command: `cp`
-* Arguments: `-r %{sourceDir}\res_test %{buildDir}\CuteCards_test\` 
-* Working d...: `%{buildDir}`
-   
-2
-* Command: `cp`
-* Arguments: `-r %{sourceDir}\res_main %{buildDir}\CuteCards_main\` 
-* Working d...: `%{buildDir}`
-
-
-##### Windows:
-
-1
-* Command: `xcopy`
-* Arguments: `/E /Y %{sourceDir}\res_test %{buildDir}\CuteCards_test\` 
-* Working d...: `%{buildDir}`
-
-
-2
-* Command: `xcopy`
-* Arguments: `/E /Y %{sourceDir}\res_main %{buildDir}\CuteCards_main\` 
-* Working d...: `%{buildDir}`
-
-
-
-This is needed to ensure that the files in res_test and res_main gets copied into the build directories.
+Configure and then build it.
 
 ## Qmake
 
@@ -98,10 +52,6 @@ Or you can choose to build the project with **qmake**
 You may have to change the variables `QMAKESPEC` and `PATH`. See [qmake Variables](http://doc.qt.io/qt-5/qmake-variable-reference.html) for details.
 
 `qmake -makefile <PATH_TO_PRO_FILE>/CuteCards.pro`
-
-`cp -r <PATH_TO_PRO_FILE>/CuteCards/res_test <PATH_TO_BUILD>/CuteCards_test/`
-
-`cp -r <PATH_TO_PRO_FILE>/CuteCards/res_main <PATH_TO_BUILD>/CuteCards_main/`
 
 # License
 
