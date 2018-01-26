@@ -39,8 +39,9 @@ Such as chinese.
 ## Get the Qt sources
 
 You need the original Qt libraries to build this project.
-Get the Qt sources at: [Sources](http://download.qt.io/official_releases/qt/5.10/5.10.0/single/)
-alternatively get the Qt Editor: [Qt Editor](https://www.qt.io/download-qt-installer)
+
+* Get the Qt sources at: [Sources](http://download.qt.io/official_releases/qt/5.10/5.10.0/single/)
+* Or get the Qt Editor: [Qt Editor](https://www.qt.io/download-qt-installer)
 
 ## To build
 
