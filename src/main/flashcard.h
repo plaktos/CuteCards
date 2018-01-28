@@ -21,6 +21,12 @@
 #ifndef FLASHCARD_H
 #define FLASHCARD_H
 
+/*
+ *  A Flashcard stores words in its member QStringList
+ * Flashcards get created when reading a .deck file and are stored in a Deck object.
+*/
+
+
 #include <QStringList>
 
 struct Flashcard{
@@ -29,7 +35,7 @@ struct Flashcard{
         : num_words(wlist.size()),
           words()                                       { for(auto elem : wlist) { words.append(elem); } }
 
-    Flashcard(const QList<QString> &wlist)
+    Flashcard(const QStringList &wlist)
         : num_words(wlist.size()),
           words(wlist) {}
 
@@ -42,19 +48,19 @@ struct Flashcard{
     bool operator !=(const Flashcard& other) const      { return !(this->operator==(other)); }
 
     inline
-    const QString operator[](const int i)  const        { return words.at(i); }
+    QString operator[](const int i)  const              { return words.at(i); }
 
     inline
     size_t size() const                                 { return words.size(); }
 
     inline
-    const QString at(const int i) const                 { return this->operator[](i); }
+    QString at(const int i) const                       { return this->operator[](i); }
 
 
 private:
 
     int num_words;
-    QList<QString> words;
+    QStringList words;
 };
 
 #endif // FLASHCARD_H

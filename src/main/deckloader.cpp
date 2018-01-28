@@ -23,6 +23,10 @@
 Deck
 DeckLoader::fromDeckFile(const QString &filename){
     QJsonDocument doc = loadJsonDoc(filename);
+    if(doc.isNull()){
+        qDebug() << "Returning empty deck";
+        return Deck();
+    }
     return parseDeck(doc);
 }
 
@@ -97,7 +101,7 @@ DeckLoader::parseDeck(const QJsonDocument& doc){
     QJsonArray jarr_languages = jo_properties["Languages"].toArray();
 
     QList<Flashcard> deck_cards;
-    QList<QString> deck_languages;
+    QStringList deck_languages;
 
     //Append all the strings in "Languages" to deck_languages
     for(auto jval_language : jarr_languages){
@@ -107,7 +111,7 @@ DeckLoader::parseDeck(const QJsonDocument& doc){
     //Go through every JSON array in "Words"
     //Every element inside "Words" is an array (we confirm this with validateData())
     for(auto array : jarr_words){
-        QList<QString> strings_from_array;
+        QStringList strings_from_array;
 
         //Go through every JSON string in the current array
         for(auto jval_word : array.toArray()){

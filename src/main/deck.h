@@ -21,6 +21,20 @@
 #ifndef DECK_H
 #define DECK_H
 
+/* Decks store Flashcards inside a QList<Flashcard>
+ * A Deck has a KeyIndex, which holds which language is the current key.
+ * The word with the key is the one that is shown first, and the rest are shown
+ * after user interaction.
+ *
+ * A Flashcard in a deck must have an equal number of words to the languages in the deck.
+ * So for any given Deck;   Deck::at(n).size() == Deck::languages.size()
+ *
+ * A key can be set with setKey(n) where n < languages.size()
+ * The method key(n) returns the key word of the corresponding Flashcard.
+ * The method withoutKey() returns a QStringList without the key word.
+*/
+
+
 #include "flashcard.h"
 
 
@@ -33,7 +47,7 @@ struct Deck{
           keyIndex(0) {}
 
     Deck(const QString& str_title,
-         const QList<QString> list_langs,
+         const QStringList list_langs,
          const QList<Flashcard>& card_list)
             : title(str_title),
             languages(list_langs),
@@ -41,11 +55,19 @@ struct Deck{
             keyIndex(1) {}
 
     inline
-    const Flashcard operator[](int i) const         { return cards.at(i); }
+    Flashcard operator[](int i) const               { return cards.at(i); }
 
     inline
-    bool operator==(const Deck& other) const        { return (title == other.title) && (languages == other.languages) &&
-                                                             (cards == other.cards) ?
+    Flashcard at(int i)                             { return this->operator [](i); }
+
+    inline
+    QList<Flashcard> getCards() const               { return cards; }
+
+    inline
+    bool operator==(const Deck& other) const        { return (title == other.title) &&
+                                                             (languages == other.languages) &&
+                                                             (cards == other.cards) &&
+                                                             ( keyIndex == other.keyIndex) ?
                                                              true : false; }
 
     inline
@@ -56,10 +78,16 @@ struct Deck{
     bool empty() const                              { return cards.size() > 0 ? false : true;}
 
     inline
+    void addCard(const Flashcard& card)             { cards.append(card); }
+
+    void
+    mergeDeck(const Deck& other)                    { cards += other.getCards(); }
+
+    inline
     QString getTitle() const                        { return title; }
 
     inline
-    QList<QString> getLanguages() const             { return languages; }
+    QStringList getLanguages() const             { return languages; }
 
     inline
     size_t size() const                             { return cards.size(); }
@@ -75,7 +103,7 @@ struct Deck{
                                                         keyIndex = i;}
                                                       }
 
-    QList<QString> withoutKey(unsigned int n)       { QList<QString> retlist;
+    QStringList withoutKey(unsigned int n)       { QStringList retlist;
                                                       for(int i = 0; i < cards[n].size(); ++i){
                                                           if(!(i == keyIndex))
                                                               retlist.append(cards[n].at(i)); }
@@ -83,7 +111,7 @@ struct Deck{
 
 private:
     QString title;
-    QList<QString> languages;
+    QStringList languages;
     QList<Flashcard> cards;
     unsigned int keyIndex;
 };
