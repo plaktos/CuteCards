@@ -12,7 +12,7 @@ DeckScrollList::DeckScrollList(QWidget *parent) : QWidget(parent)
     mainLayout->setSizeConstraint(QLayout::SetMinimumSize);
     mainLayout->setAlignment(Qt::AlignLeft);
     mainLayout->setContentsMargins(0,0,0,0);
-    //mainLayout->addStretch(1);
+    mainLayout->addStretch(1);
 
     // Setup this
     setLayout(mainLayout);

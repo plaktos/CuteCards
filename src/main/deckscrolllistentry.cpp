@@ -21,7 +21,7 @@ DeckScrollListEntry::DeckScrollListEntry(const QString &title, int index, QWidge
 
     // Setup this
     setLayout(mainLayout);
-    QSizePolicy sizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Fixed);
+    QSizePolicy sizePolicy(QSizePolicy::Fixed, QSizePolicy::MinimumExpanding);
     setSizePolicy(sizePolicy);
 
     // Connections

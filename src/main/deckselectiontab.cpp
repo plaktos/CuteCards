@@ -76,7 +76,9 @@ DeckSelectionTab::StartExam(){
         if(availableDecksSelectionIndexes[i] == Qt::Checked)
             currExamDeck.data()->mergeDeck(availableDecks[i]);
     }
-    emit ExamToStartWithDeck(currExamDeck.toWeakRef());
+    if(!currExamDeck.data()->empty()){
+        emit ExamToStartWithDeck(currExamDeck.toWeakRef());
+    }
 }
 
 void
