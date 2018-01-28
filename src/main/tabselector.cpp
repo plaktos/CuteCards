@@ -10,6 +10,9 @@ TabSelector::TabSelector(QWidget *parent)
     deckSelectionTabButton->resize(CENTRAL_TABSELECTOR_BUTTONS_HINT_WIDTH, deckSelectionTabButton->height());
     deckEditorTabButton->resize(CENTRAL_TABSELECTOR_BUTTONS_HINT_WIDTH, deckEditorTabButton->height());
     statisticsTabButton->resize(CENTRAL_TABSELECTOR_BUTTONS_HINT_WIDTH, statisticsTabButton->height());
+    deckSelectionTabButton->setFocusPolicy(Qt::NoFocus);
+    deckEditorTabButton->setFocusPolicy(Qt::NoFocus);
+    statisticsTabButton->setFocusPolicy(Qt::NoFocus);
 
     mainLayout = new QHBoxLayout;
     mainLayout->setAlignment(Qt::AlignCenter);

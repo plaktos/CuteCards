@@ -37,8 +37,8 @@ DeckSearcher::DeckSearcher(QWidget *parent)
     connect(bottomButton, &QPushButton::pressed,
             this, &DeckSearcher::bottomButtonPressed);
 
-    connect(deckScrollList, &DeckScrollList::selectionChanged,
-            this, &DeckSearcher::changeSelection);
+    connect(deckScrollList, &DeckScrollList::SelectedStateChangedOnEntry,
+            this, &DeckSearcher::SelectedStateChangedOnEntry);
 
     connect(deckScrollList, &DeckScrollList::EditButtonPressedOnEntry,
             this, &DeckSearcher::EditButtonPressedOnEntry);

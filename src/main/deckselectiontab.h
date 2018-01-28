@@ -5,6 +5,7 @@
 #include<QVector>
 #include<QDir>
 #include<QStringList>
+#include<QMap>
 
 #include "tab.h"
 #include "windowdefines.h"
@@ -36,10 +37,12 @@ signals:
 public slots:
 
     inline
-    void setAvailableDecksSelectedIndexes(const QVector<int> &indexes)  { availableDecksSelectionIndexes = indexes; }
+    void changeSelectedAvailableDecksList(const int &index,
+                                          Qt::CheckState state);
 
-    inline
-    void setExamDecksSelectedIndexes(const QVector<int> &indexes)       { examDecksSelectionIndexes = indexes; }
+    //inline
+    //void chaneSelectedExamDecksList(const int &index,
+    //                                Qt::CheckState state);
 
     void SignalToEditAvailableDeckAt(const int &index);
 
@@ -60,8 +63,8 @@ private:
 
     QList<Deck> availableDecks;
     QList<Deck> examDecks;
-    QVector<int> availableDecksSelectionIndexes;
-    QVector<int> examDecksSelectionIndexes;
+    QVector<Qt::CheckState> availableDecksSelectionIndexes;
+    QVector<Qt::CheckState> examDecksSelectionIndexes;
 
     QSharedPointer<Deck> currExamDeck;
 

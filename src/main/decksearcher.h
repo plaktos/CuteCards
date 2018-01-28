@@ -49,15 +49,12 @@ signals:
     // Just for forwarding the titles to the member DeckScrollList
     void DeckTitleListChanged(const QStringList &titles);
 
-    void SelectionChanged(const QVector<int> &indexes);
-
     void EditButtonPressedOnEntry(const int &index);
+    void SelectedStateChangedOnEntry(const int &index,
+                                     const Qt::CheckState &state);
 
 public slots:
     void setDeckTitleList(const QStringList &titles)         { emit DeckTitleListChanged(titles); }
-
-    void changeSelection(const QVector<int> &indexes)           { selectionIndexes = indexes;
-                                                                  emit SelectionChanged(indexes); }
 
 private:
     // Layout for this. Vertical layout, on the top is the DeckSearchBar,

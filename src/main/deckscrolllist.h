@@ -48,6 +48,8 @@ signals:
     // Upon the user selecting decks a selectionChanged signal gets sent.
     void selectionChanged(QVector<int> indexes);
     void EditButtonPressedOnEntry(const int &index);
+    void SelectedStateChangedOnEntry(const int &index,
+                                     const Qt::CheckState &state);
 
 public slots:
     // changes the text to search for among the titles, and start the timer,

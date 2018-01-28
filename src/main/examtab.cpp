@@ -64,6 +64,7 @@ void
 ExamTab::NextCard(){
     if(currCardIndex > deck.data()->size() - 1){
         //FinishExam();
+        releaseKeyboard();
     }
     else{
         currKey = deck.data()->key(currCardIndex);
@@ -76,4 +77,5 @@ ExamTab::NextCard(){
 void
 ExamTab::StartExamWithDeck(const QWeakPointer<Deck> &d){
     deck = d;
+    grabKeyboard();
 }

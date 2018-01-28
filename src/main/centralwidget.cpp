@@ -39,7 +39,7 @@ CentralWidget::CentralWidget(QWidget *parent)
 
     //Connections between tabs
     connect(deckSelectionTab, &DeckSelectionTab::ExamToStartWithDeck,
-            examTab, &ExamTab::StartExamWithDeck);
+            this, &CentralWidget::StartExamWithDeck);
 
     //connect(deckSelectionTab, &DeckSelectionTab::ToEditDeck,
     //        deckEditorTab, &DeckEditor::EditDeck);
@@ -72,12 +72,12 @@ CentralWidget::changeToDeckSelectionTab(){
 }
 
 void
-CentralWidget::changeToExamTab(){
+CentralWidget::StartExamWithDeck(const QWeakPointer<Deck> &d){
 
     //If exam is running, abort it
-
     HideAllTabs();
     examTab->setHidden(false);
+    examTab->StartExamWithDeck(d);
 }
 
 void

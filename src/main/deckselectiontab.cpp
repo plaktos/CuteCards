@@ -5,7 +5,7 @@ DeckSelectionTab::DeckSelectionTab(QWidget* parent)
 {
     // Setup member widgets
     availableDecksSearcher = new DeckSearcher;
-    availableDecksSearcher->setHideBottomButton(true);
+    availableDecksSearcher->setBottomButtonText("Start");
     //examDecksSearcher = new DeckSearcher;
     //examDecksSearcher->setBottomButtonText("Start");
 
@@ -21,11 +21,9 @@ DeckSelectionTab::DeckSelectionTab(QWidget* parent)
     setLayout(mainLayout);
 
     // Connections
+
     connect(this, &DeckSelectionTab::AvailableDeckTitlesChanged,
             availableDecksSearcher, &DeckSearcher::setDeckTitleList);
-
-    connect(availableDecksSearcher, &DeckSearcher::SelectionChanged,
-            this, &DeckSelectionTab::setAvailableDecksSelectedIndexes);
 
     //connect(examDecksSearcher, &DeckSearcher::SelectionChanged,
     //        this, &DeckSelectionTab::setExamDecksSelectedIndexes);
@@ -36,11 +34,19 @@ DeckSelectionTab::DeckSelectionTab(QWidget* parent)
     connect(availableDecksSearcher, &DeckSearcher::EditButtonPressedOnEntry,
             this, &DeckSelectionTab::SignalToEditAvailableDeckAt);
 
+    connect(availableDecksSearcher, &DeckSearcher::SelectedStateChangedOnEntry,
+            this, &DeckSelectionTab::changeSelectedAvailableDecksList);
+
+    // Temporary
+    connect(availableDecksSearcher, &DeckSearcher::bottomButtonPressed,
+            this, &DeckSelectionTab::StartExam);
+
 }
 
 void
 DeckSelectionTab::LoadAvailableDecks(){
     availableDecks.clear();
+    availableDecksSelectionIndexes.clear();
 
     QDir resDir("./res");
     QStringList entries = resDir.entryList(QStringList{"*.deck"});
@@ -56,14 +62,19 @@ DeckSelectionTab::LoadAvailableDecks(){
     for(auto &deck : availableDecks){
         deckTitlesList.append(deck.getTitle());
     }
+
+    for(int i = 0; i < availableDecks.size(); ++i)
+        availableDecksSelectionIndexes.push_back(Qt::Unchecked);
+
     emit AvailableDeckTitlesChanged(deckTitlesList);
 }
 
 void
 DeckSelectionTab::StartExam(){
     currExamDeck = QSharedPointer<Deck>(new Deck);
-    for(int i = 0; i < examDecksSelectionIndexes.size(); ++i){
-        currExamDeck.data()->mergeDeck(examDecks[examDecksSelectionIndexes[i]]);
+    for(int i = 0; i < availableDecksSelectionIndexes.size(); ++i){
+        if(availableDecksSelectionIndexes[i] == Qt::Checked)
+            currExamDeck.data()->mergeDeck(availableDecks[i]);
     }
     emit ExamToStartWithDeck(currExamDeck.toWeakRef());
 }
@@ -71,4 +82,9 @@ DeckSelectionTab::StartExam(){
 void
 DeckSelectionTab::SignalToEditAvailableDeckAt(const int &index){
     emit ToEditDeck(availableDecks[index]);
+}
+
+void
+DeckSelectionTab::changeSelectedAvailableDecksList(const int &index, Qt::CheckState state){
+    availableDecksSelectionIndexes[index] = state;
 }

@@ -28,9 +28,9 @@ signals:
 
 public slots:
     void changeToDeckSelectionTab();
-    void changeToExamTab();
     void changeToDeckEditorTab();
     void changeToStatisticsTab();
+    void StartExamWithDeck(const QWeakPointer<Deck> &d);
 
 private:
     // Used to hide all tabs, then we unhid the current tab, called by the changeTo*Tab functions

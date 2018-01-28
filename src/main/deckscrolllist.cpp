@@ -10,12 +10,13 @@ DeckScrollList::DeckScrollList(QWidget *parent) : QWidget(parent)
     // Layout setup
     mainLayout = new QVBoxLayout;
     mainLayout->setSizeConstraint(QLayout::SetMinimumSize);
-    mainLayout->setSpacing(5);
-    mainLayout->addStretch(1);
+    mainLayout->setAlignment(Qt::AlignLeft);
+    mainLayout->setContentsMargins(0,0,0,0);
+    //mainLayout->addStretch(1);
 
     // Setup this
     setLayout(mainLayout);
-    QSizePolicy sizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
+    QSizePolicy sizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
     setSizePolicy(sizePolicy);
 
     // Connections
@@ -56,5 +57,8 @@ DeckScrollList::InitTitleLabels(){
         mainLayout->insertWidget(mainLayout->count()-1,scrollListEntries[i]);
         connect(newEntry, &DeckScrollListEntry::EditButtonPressed,
                 this, &DeckScrollList::EditButtonPressedOnEntry);
+
+        connect(newEntry, &DeckScrollListEntry::SelectedStateChanged,
+                this, &DeckScrollList::SelectedStateChangedOnEntry);
     }
 }
