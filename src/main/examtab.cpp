@@ -24,23 +24,25 @@ ExamTab::ExamTab(QWidget *parent)
     : Tab(parent),
       deck(),
       mainBox(0),
-      currCardIndex(0)
+      currCardIndex(0), currKey(), currRestWords()
 {
+    // Setup members
     mainBox = new ExamMainBox;
 
+    // Setup layout
     QVBoxLayout *mainLayout = new QVBoxLayout;
     mainLayout->setAlignment(Qt::AlignCenter);
     mainLayout->addStretch(1);
     mainLayout->addWidget(mainBox);
     mainLayout->addStretch(1);
 
+    // Setup this
     setLayout(mainLayout);
 
     //Connections with mainBox
-    connect(this, SIGNAL(deckChanged(QWeakPointer<Deck>)),
-            mainBox, SLOT(setCurrentDeck(QWeakPointer<Deck>)));
-    connect(this, SIGNAL(changeToNextCard(unsigned int)),
-            mainBox, SLOT(NextCard(unsigned int)));
+    connect(this, &ExamTab::changeToCard,
+            mainBox, &ExamMainBox::setCard);
+
     connect(this, SIGNAL(toRevealCard()),
             mainBox, SLOT(RevealCard()));
 }
@@ -64,7 +66,9 @@ ExamTab::NextCard(){
         //FinishExam();
     }
     else{
-        emit changeToNextCard(currCardIndex);
+        currKey = deck.data()->key(currCardIndex);
+        currRestWords = deck.data()->withoutKey(currCardIndex);
+        emit changeToCard(currKey, currRestWords);
         ++currCardIndex;
     }
 }
@@ -72,5 +76,4 @@ ExamTab::NextCard(){
 void
 ExamTab::StartExamWithDeck(const QWeakPointer<Deck> &d){
     deck = d;
-    emit deckChanged(d);
 }

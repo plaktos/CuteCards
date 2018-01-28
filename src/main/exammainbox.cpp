@@ -20,19 +20,27 @@
 
 #include "exammainbox.h"
 
-LowerBox::LowerBox(const QList<QString> list, QWidget *parent)
-    : QWidget(parent),
-      restWordsList(list)
+LowerBox::LowerBox(const QStringList& restwords,
+                   QWidget *parent)
+    : QWidget(parent)
 {
+    //Setup members
+    restWordsFont.setPointSize(restWordsFont.pointSize() + 12);
+
+    // Setup layout
     mainLayout = new QVBoxLayout;
     mainLayout->setAlignment(Qt::AlignCenter);
+
+    // Setup this
     setLayout(mainLayout);
-    initRestWordLabels();
+
+    // Initialize labels based on QStringList passed in constructor.
+    initRestWordLabels(restwords);
 }
 
 void
 LowerBox::RevealWords(){
-    for(auto label: restWordsLabels){
+    for(auto &label: restWordsLabels){
         label->setVisible(true);
     }
 }
@@ -41,17 +49,17 @@ void
 LowerBox::createRestWordLabel(const QString &string){
     QLabel *newLabel = new QLabel(string);
 
-    restWordsFont.setPointSize((restWordsFont.pointSize() + 20)/restWordsList.size());
     newLabel->setFont(restWordsFont);
     newLabel->setAlignment(Qt::AlignCenter);
     newLabel->setVisible(false);
+
     mainLayout->addWidget(newLabel);
     restWordsLabels.append(newLabel);
 }
 
 void
-LowerBox::initRestWordLabels(){
-    for(auto word : restWordsList){
+LowerBox::initRestWordLabels(const QStringList& restwords){
+    for(auto word : restwords){
         createRestWordLabel(word);
     }
 }
@@ -63,7 +71,7 @@ ExamMainBox::ExamMainBox(QWidget *parent)
     //Setup keyWordLabel
     keyWordLabel = new QLabel("");
     QFont keyWordFont(keyWordLabel->font());
-    keyWordFont.setPointSize(keyWordFont.pointSize() + 20);
+    keyWordFont.setPointSize(keyWordFont.pointSize() + 18);
     keyWordLabel->setFont(keyWordFont);
     keyWordLabel->setAlignment(Qt::AlignCenter);
 
@@ -72,7 +80,6 @@ ExamMainBox::ExamMainBox(QWidget *parent)
     mainLayout->addStretch(1);
     mainLayout->addWidget(keyWordLabel);
     mainLayout->addStretch(1);
-    mainLayout->addWidget(lowerBox);
     mainLayout->addStretch(1);
     mainLayout->setAlignment(Qt::AlignCenter);
 
@@ -81,20 +88,6 @@ ExamMainBox::ExamMainBox(QWidget *parent)
     setBackgroundRole(QPalette::Midlight);
     setAutoFillBackground(true);
     setMinimumSize(EXAM_MAINBOX_MIN_WIDTH, EXAM_MAINBOX_MIN_HEIGHT);
-}
-
-void
-ExamMainBox::NextCard(unsigned int currCardIndex){
-    restWordsList.clear();
-    for(auto word : deck.data()->withoutKey(currCardIndex))
-        restWordsList.append(word);
-    resetLowerBox();
-
-    keyWordString = deck.data()->key(currCardIndex);
-    keyWordLabel->setText(keyWordString);
-
-    emit changeToNextCard(currCardIndex);
-    update();
 }
 
 void
@@ -108,6 +101,7 @@ ExamMainBox::resetLowerBox(){
     if(!(lowerBox == nullptr))
         delete lowerBox;
     lowerBox = new LowerBox(restWordsList);
+    // Insert into layout at end - 1, (before the stretch)
     mainLayout->insertWidget(mainLayout->count()-1, lowerBox);
     connect(this, SIGNAL(toRevealCard()),
             lowerBox, SLOT(RevealWords()));

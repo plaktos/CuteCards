@@ -1,12 +1,24 @@
 #ifndef TABSELECTOR_H
 #define TABSELECTOR_H
 
+/*
+ * Simple widget holding buttons corresponding to tabs,
+ * sends out signals if they are pressed.
+ *
+ * Later will be customized for custom gui.
+*/
+
 #include <QWidget>
 #include<QSize>
 #include<QHBoxLayout>
 #include<QPushButton>
 
-#include "constdefines.h"
+#include "windowdefines.h"
+
+//TabSelector variables
+const static unsigned int CENTRAL_TABSELECTOR_HINT_WIDTH = MAINWINDOW_HINT_WIDTH;
+const static unsigned int CENTRAL_TABSELECTOR_HINT_HEIGHT = MAINWINDOW_HINT_HEIGHT/8;
+const static unsigned int CENTRAL_TABSELECTOR_BUTTONS_HINT_WIDTH = MAINWINDOW_HINT_WIDTH/5;
 
 class TabSelector : public QWidget
 {

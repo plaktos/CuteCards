@@ -3,9 +3,6 @@
 TabSelector::TabSelector(QWidget *parent)
     : QWidget(parent)
 {
-    mainLayout = new QHBoxLayout;
-    mainLayout->setAlignment(Qt::AlignCenter);
-
     //Change to custom buttons later
     deckSelectionTabButton = new QPushButton("New Exam");
     deckEditorTabButton = new QPushButton("Editor");
@@ -14,6 +11,8 @@ TabSelector::TabSelector(QWidget *parent)
     deckEditorTabButton->resize(CENTRAL_TABSELECTOR_BUTTONS_HINT_WIDTH, deckEditorTabButton->height());
     statisticsTabButton->resize(CENTRAL_TABSELECTOR_BUTTONS_HINT_WIDTH, statisticsTabButton->height());
 
+    mainLayout = new QHBoxLayout;
+    mainLayout->setAlignment(Qt::AlignCenter);
     mainLayout->addWidget(deckSelectionTabButton);
     mainLayout->addWidget(deckEditorTabButton);
     mainLayout->addWidget(statisticsTabButton);

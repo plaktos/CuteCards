@@ -62,10 +62,10 @@ CentralWidget::changeToDeckSelectionTab(){
     if(deckSelectionTab->isHidden()){
         HideAllTabs();
         deckSelectionTab->setHidden(false);
+        //Upon changing to Deck selection we load the available decks.
+        // Change later to a button to reload.
+        deckSelectionTab->LoadAvailableDecks();
     }
-    //Upon changing to Deck selection we load the available decks.
-    // Change later to a button to reload.
-    deckSelectionTab->LoadAvailableDecks();
 }
 
 void

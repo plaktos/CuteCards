@@ -31,7 +31,7 @@
  *
  * A key can be set with setKey(n) where n < languages.size()
  * The method key(n) returns the key word of the corresponding Flashcard.
- * The method withoutKey() returns a QList<QString> without the key word.
+ * The method withoutKey() returns a QStringList without the key word.
 */
 
 
@@ -47,7 +47,7 @@ struct Deck{
           keyIndex(0) {}
 
     Deck(const QString& str_title,
-         const QList<QString> list_langs,
+         const QStringList list_langs,
          const QList<Flashcard>& card_list)
             : title(str_title),
             languages(list_langs),
@@ -61,7 +61,7 @@ struct Deck{
     Flashcard at(int i)                             { return this->operator [](i); }
 
     inline
-    QList<Flashcard> getCards()                     { return cards; }
+    QList<Flashcard> getCards() const               { return cards; }
 
     inline
     bool operator==(const Deck& other) const        { return (title == other.title) &&
@@ -87,7 +87,7 @@ struct Deck{
     QString getTitle() const                        { return title; }
 
     inline
-    QList<QString> getLanguages() const             { return languages; }
+    QStringList getLanguages() const             { return languages; }
 
     inline
     size_t size() const                             { return cards.size(); }
@@ -103,7 +103,7 @@ struct Deck{
                                                         keyIndex = i;}
                                                       }
 
-    QList<QString> withoutKey(unsigned int n)       { QList<QString> retlist;
+    QStringList withoutKey(unsigned int n)       { QStringList retlist;
                                                       for(int i = 0; i < cards[n].size(); ++i){
                                                           if(!(i == keyIndex))
                                                               retlist.append(cards[n].at(i)); }
@@ -111,7 +111,7 @@ struct Deck{
 
 private:
     QString title;
-    QList<QString> languages;
+    QStringList languages;
     QList<Flashcard> cards;
     unsigned int keyIndex;
 };

@@ -7,9 +7,12 @@
 #include<QStringList>
 
 #include "tab.h"
-#include "constdefines.h"
+#include "windowdefines.h"
 #include "decksearcher.h"
 #include "deckloader.h"
+
+const static unsigned int DECKSELECTIONTAB_HINT_WIDTH = MAINWINDOW_HINT_WIDTH;
+const static unsigned int DECKSELECTIONTAB_HINT_HEIGHT = MAINWINDOW_HINT_HEIGHT;
 
 class DeckSelectionTab : public Tab
 {
@@ -21,21 +24,31 @@ public:
                                                                                        DECKSELECTIONTAB_HINT_HEIGHT); }
 
 signals:
+    // Send out a signal requesting an exam to start with the deck created from
+    // the availableDeckSelectionIndexes
     void ExamToStartWithDeck(const QWeakPointer<Deck>& deck);
+
+    // Send out a signal with the new titles of the decks
     void AvailableDeckTitlesChanged(const QStringList &titles);
 
 public slots:
+
     inline
     void setAvailableDecksSelectedIndexes(const QVector<int> &indexes)  { availableDecksSelectionIndexes = indexes; }
+
     inline
     void setExamDecksSelectedIndexes(const QVector<int> &indexes)       { examDecksSelectionIndexes = indexes; }
+
     void LoadAvailableDecks();
+
+    // Connected to the signal of examDecksSearcher's bottom button.
+    // Creates a new deck from the selectionIndexes
+    // and emits the ExamToStartWithDeck signal
+    void StartExam();
 
 protected:
 
 private:
-    void StartExam();
-
     QHBoxLayout *mainLayout;
 
     DeckSearcher *availableDecksSearcher;

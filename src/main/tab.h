@@ -4,6 +4,11 @@
 #include <QSize>
 #include<QWidget>
 
+/*
+ * Abstract class for tab, sub-classes must reimplement sizeHint
+ *
+*/
+
 class Tab : public QWidget
 {
     Q_OBJECT

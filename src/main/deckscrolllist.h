@@ -15,11 +15,19 @@
 #include<QLabel>
 #include<QTimer>
 
+#include "windowdefines.h"
+
+const static unsigned int DECKSCROLLIST_HINT_HEIGHT = MAINWINDOW_HINT_HEIGHT/2;
+const static unsigned int DECKSCROLLIST_HINT_WIDTH = MAINWINDOW_HINT_WIDTH/4;
+
 class DeckScrollList : public QWidget
 {
     Q_OBJECT
 public:
     explicit DeckScrollList(QWidget *parent = nullptr);
+
+    QSize sizeHint() const override                                 { return QSize(DECKSCROLLIST_HINT_WIDTH,
+                                                                                   DECKSCROLLIST_HINT_HEIGHT); }
 
 signals:
     // Upon the user selecting decks a selectionChanged signal gets sent.
@@ -28,11 +36,11 @@ signals:
 public slots:
     // changes the text to search for among the titles, and start the timer,
     // so as to avoid searching every time the SearchBar recieves an input.
-    void changeTextToSearchFor(const QString& text)                     { textToSearchFor = text;
+    void changeTextToSearchFor(const QString& text)                  { textToSearchFor = text;
                                                                           searchTimer->start(300);}
 
     // Changes the deckTitleList, should be connected to DeckSearcher's DeckTitleListChanged signal,
-    void setDeckTitleList(const QList<QString>& titles)                 { deckTitleList = titles;
+    void setDeckTitleList(const QStringList& titles)                 { deckTitleList = titles;
                                                                           InitTitleLabels(); }
 
 private:
@@ -42,16 +50,18 @@ private:
 
     //Hides all labels, called by doASearch(), before doing a search
     void HideAllTitleLabels();
+
+    //Searches for textToSearchFor in the deck Titles, and makes the Labels,
+    //which correspond to those titles visible
     void doASearch();
 
+    // Layout is vertical. Labels are listed one after another
     QVBoxLayout *mainLayout;
 
-    QList<QString> deckTitleList;
+    QStringList deckTitleList;
     QList<QLabel *> deckTitleLabels;
     QTimer *searchTimer;
     QString textToSearchFor;
-
-
 };
 
 #endif // DECKSCROLLLIST_H

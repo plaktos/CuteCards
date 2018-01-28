@@ -21,6 +21,16 @@
 #ifndef EXAMTAB_H
 #define EXAMTAB_H
 
+
+/*
+ * ExamTab is where the actual exam happens.
+ * Contains an ExamMainBox member, and holds a weak pointer
+ * to deck created from the decks selected by the user in the Deck Selection tab.
+ * Upon user interaction it sends the data of the next Flashcard to
+ * its ExamMainBox, where the words get drawn.
+ *
+*/
+
 #include <QWidget>
 #include<QPushButton>
 #include<QFileDialog>
@@ -28,7 +38,11 @@
 #include "tab.h"
 #include "exammainbox.h"
 #include "deckloader.h"
-#include "constdefines.h"
+#include "windowdefines.h"
+
+//Exam tab variables
+const static unsigned int EXAMTAB_HINT_WIDTH = MAINWINDOW_HINT_WIDTH;
+const static unsigned int EXAMTAB_HINT_HEIGHT = MAINWINDOW_HINT_HEIGHT;
 
 class ExamTab : public Tab
 {
@@ -41,22 +55,36 @@ public:
     QSize sizeHint() const override                 { return QSize(EXAMTAB_HINT_WIDTH,EXAMTAB_HINT_HEIGHT); }
 
 signals:
-    void changeToNextCard(unsigned int i);
-    void deckChanged(const QWeakPointer<Deck>& d);
+    // Sends out a signal with the current key and restwords data of the
+    // next Flashcard to be presented to the user.
+    // Connected to ExamMainBox::setCard
+    void changeToCard(const QString& key,
+                      const QStringList& restwords);
+
+    // Signal emitted upon user interaction. Notifies ExamMainBox,
+    // to reveal the rest words content of the current Card
     void toRevealCard();
 
 public slots:
+    // Connected to DeckSelectionTab, starts an exam with the deck,
+    // created from the user's selections on the Deck Selection tab
     void StartExamWithDeck(const QWeakPointer<Deck> &d);
 
 protected:
+
+    // Overriding the keyPressEvent for Enter and Space interaction
     void keyPressEvent(QKeyEvent *event) override;
 
 private:
+    // Changes the card data to the next card's and emits changeToCard
     void NextCard();
 
-    QWeakPointer<Deck> deck;
     ExamMainBox *mainBox;
 
+    QWeakPointer<Deck> deck;
+
+    QString currKey;
+    QStringList currRestWords;
     int currCardIndex;
 };
 

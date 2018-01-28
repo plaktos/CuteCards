@@ -15,7 +15,6 @@ SOURCES += \
 
 
 HEADERS += \
-        ../src/main/constdefines.h \
         ../src/main/mainwindow.h \
         ../src/main/examtab.h \
         ../src/main/exammainbox.h \
@@ -29,3 +28,4 @@ HEADERS += \
         ../src/main/tabselector.h \
         ../src/main/decksearchbar.h \
         ../src/main/deckscrolllist.h \
+        ../src/main/windowdefines.h \
