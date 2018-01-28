@@ -31,6 +31,8 @@ signals:
     // Send out a signal with the new titles of the decks
     void AvailableDeckTitlesChanged(const QStringList &titles);
 
+    void ToEditDeck(const Deck& deck);
+
 public slots:
 
     inline
@@ -38,6 +40,8 @@ public slots:
 
     inline
     void setExamDecksSelectedIndexes(const QVector<int> &indexes)       { examDecksSelectionIndexes = indexes; }
+
+    void SignalToEditAvailableDeckAt(const int &index);
 
     void LoadAvailableDecks();
 

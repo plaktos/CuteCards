@@ -9,11 +9,14 @@ DeckScrollList::DeckScrollList(QWidget *parent) : QWidget(parent)
 
     // Layout setup
     mainLayout = new QVBoxLayout;
-    mainLayout->setSpacing(10);
+    mainLayout->setSizeConstraint(QLayout::SetMinimumSize);
+    mainLayout->setSpacing(5);
     mainLayout->addStretch(1);
 
     // Setup this
     setLayout(mainLayout);
+    QSizePolicy sizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
+    setSizePolicy(sizePolicy);
 
     // Connections
     connect(searchTimer, &QTimer::timeout,
@@ -22,35 +25,36 @@ DeckScrollList::DeckScrollList(QWidget *parent) : QWidget(parent)
 
 void
 DeckScrollList::HideAllTitleLabels(){
-    for(int i = 0; i < deckTitleLabels.size(); ++i){
-        deckTitleLabels.at(i)->setHidden(true);
+    for(auto entry : scrollListEntries){
+        entry->setHidden(true);
     }
 }
 
 void
 DeckScrollList::doASearch(){
-    HideAllTitleLabels();
+    if(!(textToSearchFor == "Search...")){
+        HideAllTitleLabels();
 
-    QString regex = QString("\b") + QString(textToSearchFor);
-
-    for(int i = 0; i < deckTitleList.size(); ++i){
-        if(deckTitleList[i].contains(regex)){
-            deckTitleLabels[i]->setHidden(false);
+        for(int i = 0; i < deckTitleList.size(); ++i){
+            if(deckTitleList[i].contains(textToSearchFor)){
+                scrollListEntries[i]->setHidden(false);
+            }
         }
     }
 }
 
 void
 DeckScrollList::InitTitleLabels(){
-    for(auto label : deckTitleLabels){
-        delete label;
+    for(auto entry : scrollListEntries){
+        delete entry;
     }
-    deckTitleLabels.clear();
+    scrollListEntries.clear();
 
     for(int i = 0; i < deckTitleList.size(); ++i){
-        QLabel *titleLabel = new QLabel(deckTitleList.at(i));
-        titleLabel->setBackgroundRole(QPalette::Light);
-        deckTitleLabels.append(titleLabel);
-        mainLayout->insertWidget(mainLayout->count()-1,deckTitleLabels[i]);
+        DeckScrollListEntry *newEntry = new DeckScrollListEntry(deckTitleList.at(i), i);
+        scrollListEntries.append(newEntry);
+        mainLayout->insertWidget(mainLayout->count()-1,scrollListEntries[i]);
+        connect(newEntry, &DeckScrollListEntry::EditButtonPressed,
+                this, &DeckScrollList::EditButtonPressedOnEntry);
     }
 }

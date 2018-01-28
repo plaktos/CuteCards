@@ -10,13 +10,14 @@ DeckSearcher::DeckSearcher(QWidget *parent)
     bottomButton = new QPushButton;
 
     // Add QScrollArea to deckScrollList
-    QScrollArea *scrollArea = new QScrollArea;
+    DeckScrollArea *scrollArea = new DeckScrollArea;
     scrollArea->setWidget(deckScrollList);
     scrollArea->setBackgroundRole(QPalette::Midlight);
+    scrollArea->setSizePolicy(deckScrollList->sizePolicy());
 
     // Setup layout
     mainLayout = new QVBoxLayout;
-    mainLayout->addStretch(1);
+    mainLayout->setSizeConstraint(QLayout::SetMinimumSize);
     mainLayout->addWidget(deckSearchBar);
     mainLayout->addWidget(scrollArea);
     mainLayout->addWidget(bottomButton);
@@ -38,4 +39,7 @@ DeckSearcher::DeckSearcher(QWidget *parent)
 
     connect(deckScrollList, &DeckScrollList::selectionChanged,
             this, &DeckSearcher::changeSelection);
+
+    connect(deckScrollList, &DeckScrollList::EditButtonPressedOnEntry,
+            this, &DeckSearcher::EditButtonPressedOnEntry);
 }

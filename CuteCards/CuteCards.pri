@@ -12,6 +12,7 @@ SOURCES += \
         ../src/main/tabselector.cpp \
         ../src/main/decksearchbar.cpp \
         ../src/main/deckscrolllist.cpp \
+        ../src/main/deckscrolllistentry.cpp \
 
 
 HEADERS += \
@@ -29,3 +30,4 @@ HEADERS += \
         ../src/main/decksearchbar.h \
         ../src/main/deckscrolllist.h \
         ../src/main/windowdefines.h \
+        ../src/main/deckscrolllistentry.h \

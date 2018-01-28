@@ -5,7 +5,7 @@ DeckSelectionTab::DeckSelectionTab(QWidget* parent)
 {
     // Setup member widgets
     availableDecksSearcher = new DeckSearcher;
-    availableDecksSearcher->setBottomButtonText("Edit");
+    availableDecksSearcher->setHideBottomButton(true);
     //examDecksSearcher = new DeckSearcher;
     //examDecksSearcher->setBottomButtonText("Start");
 
@@ -32,6 +32,9 @@ DeckSelectionTab::DeckSelectionTab(QWidget* parent)
 
     //connect(examDecksSearcher, &DeckSearcher::bottomButtonPressed,
     //        this, &DeckSelectionTab::StartExam);
+
+    connect(availableDecksSearcher, &DeckSearcher::EditButtonPressedOnEntry,
+            this, &DeckSelectionTab::SignalToEditAvailableDeckAt);
 
 }
 
@@ -63,4 +66,9 @@ DeckSelectionTab::StartExam(){
         currExamDeck.data()->mergeDeck(examDecks[examDecksSelectionIndexes[i]]);
     }
     emit ExamToStartWithDeck(currExamDeck.toWeakRef());
+}
+
+void
+DeckSelectionTab::SignalToEditAvailableDeckAt(const int &index){
+    emit ToEditDeck(availableDecks[index]);
 }

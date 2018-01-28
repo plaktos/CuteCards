@@ -16,8 +16,8 @@
 
 #include <QWidget>
 #include<QVBoxLayout>
+#include<QSizePolicy>
 #include<QPushButton>
-#include<QScrollArea>
 
 #include "decksearchbar.h"
 #include "deckscrolllist.h"
@@ -25,7 +25,7 @@
 #include "windowdefines.h"
 
 const static unsigned int DECKSEARCHER_HINT_WIDTH = MAINWINDOW_HINT_WIDTH/3;
-const static unsigned int DECKSEARCHER_HINT_HEIGHT = MAINWINDOW_HINT_HEIGHT - 100;
+const static unsigned int DECKSEARCHER_HINT_HEIGHT = MAINWINDOW_HINT_HEIGHT - 50;
 
 class DeckSearcher : public QWidget
 {
@@ -41,6 +41,7 @@ public:
     // Returns the selectionIndexes that are set by recieving a signal
     // to changeSelection
     QVector<int> selection()                                    { return selectionIndexes; }
+    void setHideBottomButton(bool b)                                     { bottomButton->setHidden(b); }
 
 signals:
     void bottomButtonPressed();
@@ -49,6 +50,8 @@ signals:
     void DeckTitleListChanged(const QStringList &titles);
 
     void SelectionChanged(const QVector<int> &indexes);
+
+    void EditButtonPressedOnEntry(const int &index);
 
 public slots:
     void setDeckTitleList(const QStringList &titles)         { emit DeckTitleListChanged(titles); }

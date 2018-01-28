@@ -41,6 +41,9 @@ CentralWidget::CentralWidget(QWidget *parent)
     connect(deckSelectionTab, &DeckSelectionTab::ExamToStartWithDeck,
             examTab, &ExamTab::StartExamWithDeck);
 
+    //connect(deckSelectionTab, &DeckSelectionTab::ToEditDeck,
+    //        deckEditorTab, &DeckEditor::EditDeck);
+
     //Start off with Deck Selection.
     //Change later to a welcome tab
     changeToDeckSelectionTab();

@@ -7,11 +7,17 @@
 */
 
 #include <QLineEdit>
+#include<QMouseEvent>
+#include<QFocusEvent>
 
 class DeckSearchBar : public QLineEdit
 {
 public:
-    DeckSearchBar();
+    DeckSearchBar(QWidget* parent = nullptr);
+
+protected:
+    void mousePressEvent(QMouseEvent *e) override;
+    void focusOutEvent(QFocusEvent *e) override;
 
 private:
 

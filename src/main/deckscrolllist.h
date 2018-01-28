@@ -14,11 +14,26 @@
 #include<QVBoxLayout>
 #include<QLabel>
 #include<QTimer>
+#include<QRegularExpression>
+#include<QScrollArea>
 
 #include "windowdefines.h"
+#include "deckscrolllistentry.h"
 
-const static unsigned int DECKSCROLLIST_HINT_HEIGHT = MAINWINDOW_HINT_HEIGHT/2;
+const static unsigned int DECKSCROLLIST_HINT_HEIGHT = MAINWINDOW_HINT_HEIGHT-200;
 const static unsigned int DECKSCROLLIST_HINT_WIDTH = MAINWINDOW_HINT_WIDTH/4;
+
+class DeckScrollArea : public QScrollArea
+{
+    Q_OBJECT
+public:
+    explicit
+    DeckScrollArea(QWidget *parent = nullptr)
+        : QScrollArea(parent) { }
+
+    QSize sizeHint() const override                                 { return QSize(DECKSCROLLIST_HINT_WIDTH,
+                                                                                   DECKSCROLLIST_HINT_HEIGHT); }
+};
 
 class DeckScrollList : public QWidget
 {
@@ -32,6 +47,7 @@ public:
 signals:
     // Upon the user selecting decks a selectionChanged signal gets sent.
     void selectionChanged(QVector<int> indexes);
+    void EditButtonPressedOnEntry(const int &index);
 
 public slots:
     // changes the text to search for among the titles, and start the timer,
@@ -59,7 +75,7 @@ private:
     QVBoxLayout *mainLayout;
 
     QStringList deckTitleList;
-    QList<QLabel *> deckTitleLabels;
+    QList<DeckScrollListEntry *> scrollListEntries;
     QTimer *searchTimer;
     QString textToSearchFor;
 };
