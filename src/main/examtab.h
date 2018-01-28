@@ -25,30 +25,28 @@
 #include<QPushButton>
 #include<QFileDialog>
 
+#include "tab.h"
 #include "exammainbox.h"
 #include "deckloader.h"
+#include "constdefines.h"
 
-const static unsigned int EXAMTAB_WIDTH = 300;
-const static unsigned int EXAMTAB_HEIGHT = 300;
-
-class ExamTab : public QWidget
+class ExamTab : public Tab
 {
     Q_OBJECT
 public:
-    explicit ExamTab(QWidget *parent = nullptr);
 
-    QSize sizeHint() const override{
-        return QSize(EXAMTAB_WIDTH,EXAMTAB_HEIGHT);
-    }
+    explicit
+    ExamTab(QWidget *parent = nullptr);
+
+    QSize sizeHint() const override                 { return QSize(EXAMTAB_HINT_WIDTH,EXAMTAB_HINT_HEIGHT); }
 
 signals:
     void changeToNextCard(unsigned int i);
-    void deckChanged(QWeakPointer<Deck> deck);
+    void deckChanged(const QWeakPointer<Deck>& d);
     void toRevealCard();
 
 public slots:
-    void changeDeck();
-
+    void StartExamWithDeck(const QWeakPointer<Deck> &d);
 
 protected:
     void keyPressEvent(QKeyEvent *event) override;
@@ -56,7 +54,7 @@ protected:
 private:
     void NextCard();
 
-    QSharedPointer<Deck> deck;
+    QWeakPointer<Deck> deck;
     ExamMainBox *mainBox;
 
     int currCardIndex;

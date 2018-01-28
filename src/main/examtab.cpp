@@ -21,26 +21,20 @@
 #include "examtab.h"
 
 ExamTab::ExamTab(QWidget *parent)
-    : QWidget(parent),
+    : Tab(parent),
       deck(),
       mainBox(0),
       currCardIndex(0)
 {
     mainBox = new ExamMainBox;
 
-    QPushButton *changeDeckButton = new QPushButton("Change Deck");
-    changeDeckButton->setFocusPolicy(Qt::NoFocus);
-
     QVBoxLayout *mainLayout = new QVBoxLayout;
-    mainLayout->addWidget(changeDeckButton);
+    mainLayout->setAlignment(Qt::AlignCenter);
+    mainLayout->addStretch(1);
     mainLayout->addWidget(mainBox);
+    mainLayout->addStretch(1);
 
     setLayout(mainLayout);
-    setFocusPolicy(Qt::StrongFocus);
-
-    //Connections with changeDeckButton
-    connect(changeDeckButton, SIGNAL(released()),
-            this, SLOT(changeDeck()));
 
     //Connections with mainBox
     connect(this, SIGNAL(deckChanged(QWeakPointer<Deck>)),
@@ -66,7 +60,7 @@ ExamTab::keyPressEvent(QKeyEvent *event){
 
 void
 ExamTab::NextCard(){
-    if(currCardIndex > deck->size() - 1){
+    if(currCardIndex > deck.data()->size() - 1){
         //FinishExam();
     }
     else{
@@ -76,21 +70,7 @@ ExamTab::NextCard(){
 }
 
 void
-ExamTab::changeDeck(){
-    QString filename = QFileDialog::getOpenFileName(this,
-                     "Open deck file", "./", "Decks(*.deck)");
-
-    if(filename.isEmpty()){
-        qDebug() << "No file specified";
-        return;
-    }
-    QSharedPointer<Deck> newDeck(new Deck(DeckLoader::fromDeckFile(filename)));
-
-    //We dont change current deck until we are sure deck was loaded successfully
-    if(!newDeck.isNull()){
-        deck.reset();
-        deck = newDeck;
-        currCardIndex = 0;
-        emit deckChanged(deck.toWeakRef());
-    }
+ExamTab::StartExamWithDeck(const QWeakPointer<Deck> &d){
+    deck = d;
+    emit deckChanged(d);
 }

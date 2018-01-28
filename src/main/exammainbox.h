@@ -29,22 +29,18 @@
 #include<QLabel>
 
 #include "deck.h"
-
-const static unsigned int MAINBOX_PREF_WIDTH = 150;
-const static unsigned int MAINBOX_PREF_HEIGHT = 150;
-const static unsigned int MAINBOX_MAX_WIDTH = 300;
-const static unsigned int MAINBOX_MAX_HEIGHT = 300;
-
-const static unsigned int LOWERBOX_PREF_HEIGHT = MAINBOX_PREF_HEIGHT/3;
-const static unsigned int LOWERBOX_MAX_HEIGHT = MAINBOX_MAX_HEIGHT/3;
+#include "constdefines.h"
 
 class LowerBox : public QWidget
 {
     Q_OBJECT
 public:
-    explicit LowerBox(const QList<QString> list, QWidget* parent = nullptr);
 
-    QSize sizeHint() const override                     { return QSize(MAINBOX_PREF_WIDTH, LOWERBOX_PREF_HEIGHT); }
+    explicit
+    LowerBox(const QList<QString> list,
+             QWidget* parent = nullptr);
+
+    QSize sizeHint() const override                     { return QSize(EXAM_MAINBOX_HINT_WIDTH, EXAM_LOWERBOX_HINT_HEIGHT); }
 
 public slots:
     //Initializes the Labels based on the current card,
@@ -69,7 +65,7 @@ class ExamMainBox : public QWidget
 public:
     explicit ExamMainBox(QWidget *parent = nullptr);
 
-    QSize sizeHint() const override                     { return QSize(MAINBOX_PREF_WIDTH, MAINBOX_PREF_HEIGHT); }
+    QSize sizeHint() const override                     { return QSize(EXAM_MAINBOX_HINT_WIDTH, EXAM_MAINBOX_HINT_HEIGHT); }
 
 signals:
     void changeToNextCard(unsigned int);

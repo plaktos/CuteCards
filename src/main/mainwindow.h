@@ -25,7 +25,7 @@
 #include<QTabWidget>
 #include<QVBoxLayout>
 
-#include "examtab.h"
+#include "centralwidget.h"
 
 class MainWindow : public QMainWindow
 {
@@ -35,8 +35,9 @@ public:
     MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+    QSize sizeHint() const override                 { return QSize(MAINWINDOW_HINT_WIDTH,MAINWINDOW_HINT_HEIGHT); }
+
 private:
-    QTabWidget *tabs;
 };
 
 #endif // MAINWINDOW_H

@@ -21,6 +21,12 @@
 #ifndef FLASHCARD_H
 #define FLASHCARD_H
 
+/*
+ *  A Flashcard stores words in its member QList<QString>
+ * Flashcards get created when reading a .deck file and are stored in a Deck object.
+*/
+
+
 #include <QStringList>
 
 struct Flashcard{

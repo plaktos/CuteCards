@@ -21,6 +21,14 @@
 #ifndef DECKLOADER_H
 #define DECKLOADER_H
 
+/*
+ * Loads .deck files with fromDeckFile(filepath)
+ * .deck files get validated both as a valid JSON document,
+ * and as a valid .deck file.
+ *
+ * Usage:   DeckLoader::fromDeckFile(path to file)
+*/
+
 #include<QList>
 #include<QJsonDocument>
 #include<QJsonObject>
@@ -47,7 +55,7 @@ private:
     static
     bool validateDeck(const QJsonDocument& doc);
 
-    //Parses the deck in .data and returns an rvalue reference
+    //Parses the deck in .data and returns a Deck
     static
     Deck parseDeck(const QJsonDocument& doc);
 

@@ -27,7 +27,6 @@ LowerBox::LowerBox(const QList<QString> list, QWidget *parent)
     mainLayout = new QVBoxLayout;
     mainLayout->setAlignment(Qt::AlignCenter);
     setLayout(mainLayout);
-
     initRestWordLabels();
 }
 
@@ -81,6 +80,7 @@ ExamMainBox::ExamMainBox(QWidget *parent)
     setLayout(mainLayout);
     setBackgroundRole(QPalette::Midlight);
     setAutoFillBackground(true);
+    setMinimumSize(EXAM_MAINBOX_MIN_WIDTH, EXAM_MAINBOX_MIN_HEIGHT);
 }
 
 void

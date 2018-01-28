@@ -23,12 +23,7 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
-    ExamTab *examTab = new ExamTab;
-
-    tabs = new QTabWidget;
-    tabs->addTab(examTab,"Exam");
-
-    setCentralWidget(tabs);
+    setCentralWidget(new CentralWidget);
 }
 
 MainWindow::~MainWindow()
