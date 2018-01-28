@@ -1,8 +1,8 @@
 # What is this?
 
-This project is meant to develop a Flashcard program using Qt5.10,
-it reads .deck files from the res folder, which are JSON documents formatted
-in a specific way.
+This project is meant to develop a Flashcard program using Qt5.10.
+
+It takes .deck files which are JSON documents formatted in a specific way.
 
 # How do I format the .deck file
 
@@ -28,6 +28,7 @@ These are with the respective keys `Properties` and `Words`.
 The JSON Object `Properties` contains information about the deck itself.
 The JSON Object `Words` contains the actual JSON Array.
 Inside this JSON Array are more arrays, each one corresponding to a word.
+The number of words in this array must equal to the number of languages.
 These get turned into Flashcard objects, which are read into a Deck.
 
 Flashcards are designed this way, to provide support for languages that require more than 2 words.
@@ -38,8 +39,9 @@ Such as chinese.
 ## Get the Qt sources
 
 You need the original Qt libraries to build this project.
-Get the Qt sources at: [Sources](http://download.qt.io/official_releases/qt/5.10/5.10.0/single/)
-alternatively get the Qt Editor: [Qt Editor](https://www.qt.io/download-qt-installer)
+
+* Get the Qt sources at: [Sources](http://download.qt.io/official_releases/qt/5.10/5.10.0/single/)
+* Or get the Qt Editor: [Qt Editor](https://www.qt.io/download-qt-installer)
 
 ## To build
 
