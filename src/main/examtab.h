@@ -35,7 +35,6 @@
 #include<QPushButton>
 #include<QFileDialog>
 
-#include "tab.h"
 #include "exammainbox.h"
 #include "deckloader.h"
 #include "windowdefines.h"
@@ -44,7 +43,7 @@
 const static unsigned int EXAMTAB_HINT_WIDTH = MAINWINDOW_HINT_WIDTH;
 const static unsigned int EXAMTAB_HINT_HEIGHT = MAINWINDOW_HINT_HEIGHT;
 
-class ExamTab : public Tab
+class ExamTab : public QWidget
 {
     Q_OBJECT
 public:

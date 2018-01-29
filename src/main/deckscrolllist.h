@@ -1,13 +1,33 @@
+//
+//This file is part of CuteCards software.
+//
+//    CuteCards is Flashcard software developed in C++, with the use of the Qt Framework
+//    Copyright (C) 2018 Peter Lakatos
+//
+//    CuteCards is free software: you can redistribute it and/or modify
+//    it under the terms of the GNU General Public License as published by
+//    the Free Software Foundation, either version 3 of the License, or
+//    (at your option) any later version.
+//
+//    CuteCards is distributed in the hope that it will be useful,
+//    but WITHOUT ANY WARRANTY; without even the implied warranty of
+//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//    GNU General Public License for more details.
+//
+//    You should have received a copy of the GNU General Public License
+//    along with CuteCards.  If not, see <http://www.gnu.org/licenses/>.
+//
+
 #ifndef DECKSCROLLLIST_H
 #define DECKSCROLLLIST_H
 
 /*
- * DeckScrollList holds a list of Deck titles,
+ * DeckScrollList holds a list of DeckScrollListEntry widgets
  * provides a way for the user to select one more multiple decks
  * and then send a signal with these indexes.
  * Should be contained within a DeckSearcher, which provides a SearchBar,
  * whose textChanged signal should be connected with DeckScrollList changeTextToSearchFor,
- * Apply QScrollArea to it after construction to make it scrollable.
+ * Apply DeckScrollArea to it after construction to make it scrollable.
 */
 
 #include <QWidget>

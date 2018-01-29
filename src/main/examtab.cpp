@@ -21,7 +21,7 @@
 #include "examtab.h"
 
 ExamTab::ExamTab(QWidget *parent)
-    : Tab(parent),
+    : QWidget(parent),
       deck(),
       mainBox(0),
       currCardIndex(0), currKey(), currRestWords()

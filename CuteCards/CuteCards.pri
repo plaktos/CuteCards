@@ -25,7 +25,6 @@ HEADERS += \
         ../src/main/deckselectiontab.h \
         ../src/main/decksearcher.h \
         ../src/main/centralwidget.h \
-        ../src/main/tab.h \
         ../src/main/tabselector.h \
         ../src/main/decksearchbar.h \
         ../src/main/deckscrolllist.h \
