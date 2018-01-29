@@ -33,33 +33,38 @@ DeckSearcher::DeckSearcher(QWidget *parent)
     DeckScrollArea *scrollArea = new DeckScrollArea;
     scrollArea->setWidget(deckScrollList);
     scrollArea->setBackgroundRole(QPalette::Midlight);
-    scrollArea->setSizePolicy(deckScrollList->sizePolicy());
 
     // Setup layout
     mainLayout = new QVBoxLayout;
-    mainLayout->setSizeConstraint(QLayout::SetMinimumSize);
     mainLayout->addWidget(deckSearchBar);
     mainLayout->addWidget(scrollArea);
     mainLayout->addWidget(bottomButton);
-    mainLayout->addStretch(1);
 
     // Setup this
     setLayout(mainLayout);
 
 
     // Connections
-    connect(deckSearchBar, &DeckSearchBar::textChanged,
-            deckScrollList, &DeckScrollList::changeTextToSearchFor);
+    connect(deckSearchBar, &DeckSearchBar::NeedTitleSearchFor,
+            deckScrollList, &DeckScrollList::doATitleSearch);
 
-    connect(this, &DeckSearcher::DeckTitleListChanged,
-            deckScrollList, &DeckScrollList::setDeckTitleList);
+    connect(deckSearchBar, &DeckSearchBar::NeedLanguageSearchFor,
+            deckScrollList, &DeckScrollList::doALanguageSearch);
 
     connect(bottomButton, &QPushButton::pressed,
             this, &DeckSearcher::bottomButtonPressed);
 
-    connect(deckScrollList, &DeckScrollList::SelectedStateChangedOnEntry,
-            this, &DeckSearcher::SelectedStateChangedOnEntry);
-
     connect(deckScrollList, &DeckScrollList::EditButtonPressedOnEntry,
             this, &DeckSearcher::EditButtonPressedOnEntry);
+
+    connect(deckScrollList, &DeckScrollList::languageLockModeChanged,
+            deckSearchBar, &DeckSearchBar::setLock);
+}
+
+void
+DeckSearcher::refillScrollList(){
+    deckScrollList->clearEntries();
+    for(auto const &deck : *decks){
+        deckScrollList->addEntry(&deck);
+    }
 }

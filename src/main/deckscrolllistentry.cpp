@@ -20,29 +20,46 @@
 
 #include "deckscrolllistentry.h"
 
-DeckScrollListEntry::DeckScrollListEntry(const QString &title, int index, QWidget *parent)
+DeckScrollListEntry::DeckScrollListEntry(int index,
+                                         const QString &title,
+                                         const QStringList &langs,
+                                         QWidget *parent)
     : QWidget(parent),
-      id(index)
+      id(index),
+      languages(langs)
 {
     // Setup members
     selectedCheckBox = new QCheckBox;
-    titleLabel = new QLabel(title);
+    titleLabel = new DeckLabel(title);
+
+    languageLabel = new DeckLabel;
+    QString languageLabelText;
+    QFont languageLabelFont(languageLabel->font());
+    languageLabelFont.setPointSizeF(languageLabelFont.pointSizeF()-1.8);
+    languageLabelText.append(langs[0]);
+    for(int i = 1; i < langs.size(); ++i){
+        languageLabelText.append(QString(",") + langs[i]);
+    }
+    languageLabel->setText(languageLabelText);
+    languageLabel->setFont(languageLabelFont);
+
     editButton = new QPushButton("E");
     editButton->setMaximumSize(20,15);
 
     // Setup Layout
     mainLayout = new QHBoxLayout;
+    mainLayout->setAlignment(Qt::AlignLeft);
     mainLayout->addWidget(selectedCheckBox);
-    mainLayout->addStretch(10);
     mainLayout->addWidget(titleLabel);
-    mainLayout->addStretch(30);
     mainLayout->addWidget(editButton);
+    mainLayout->addSpacing(10);
+    mainLayout->addWidget(languageLabel);
     mainLayout->addStretch(1);
 
     // Setup this
     setLayout(mainLayout);
-    QSizePolicy sizePolicy(QSizePolicy::Fixed, QSizePolicy::MinimumExpanding);
-    setSizePolicy(sizePolicy);
+    setSizePolicy(QSizePolicy::MinimumExpanding,
+                  QSizePolicy::Fixed);
 
     // Connections
     connect(editButton, &QPushButton::pressed,

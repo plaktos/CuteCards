@@ -26,20 +26,61 @@
  *
 */
 
+#include<QWidget>
+#include<QHBoxLayout>
 #include <QLineEdit>
 #include<QMouseEvent>
+#include<QPaintEvent>
 #include<QFocusEvent>
+#include<QTimer>
 
-class DeckSearchBar : public QLineEdit
+const static unsigned int DECKSEARCHBAR_HINT_WIDTH = 300;
+const static unsigned int DECKSEARCHBAR_HINT_HEIGHT = 50;
+
+class DeckSearchBarPart : public QLineEdit
 {
+    Q_OBJECT
 public:
-    DeckSearchBar(QWidget* parent = nullptr);
+    DeckSearchBarPart(const QString& deftext,
+                       QWidget* parent = nullptr);
+
+signals:
+    void needSearchFor(const QString& text);
 
 protected:
     void mousePressEvent(QMouseEvent *e) override;
     void focusOutEvent(QFocusEvent *e) override;
 
 private:
+    QString defaultText;
+    QTimer *searchTimer;
+};
+
+class DeckSearchBar : public QWidget
+{
+    Q_OBJECT
+public:
+    DeckSearchBar(QWidget* parent = nullptr);
+
+    QSize sizeHint() const override             { return QSize(); }
+signals:
+    void NeedTitleSearchFor(const QString& text);
+    void NeedLanguageSearchFor(const QString& text);
+
+public slots:
+    void setLock(bool lock)                     { titleSearcher->setReadOnly(lock);
+                                                  languageSearcher->setReadOnly(lock);
+                                                  locked = lock;
+                                                  update(); }
+
+protected:
+    void paintEvent(QPaintEvent *e);
+
+private:
+    QHBoxLayout *mainLayout;
+    DeckSearchBarPart *titleSearcher;
+    DeckSearchBarPart *languageSearcher;
+    bool locked;
 
 };
 

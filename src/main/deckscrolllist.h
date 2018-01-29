@@ -33,15 +33,15 @@
 #include <QWidget>
 #include<QVBoxLayout>
 #include<QLabel>
-#include<QTimer>
 #include<QRegularExpression>
 #include<QScrollArea>
 
 #include "windowdefines.h"
 #include "deckscrolllistentry.h"
+#include "deck.h"
 
 const static unsigned int DECKSCROLLIST_HINT_HEIGHT = MAINWINDOW_HINT_HEIGHT-200;
-const static unsigned int DECKSCROLLIST_HINT_WIDTH = MAINWINDOW_HINT_WIDTH/4;
+const static unsigned int DECKSCROLLIST_HINT_WIDTH = MAINWINDOW_HINT_WIDTH/2-50;
 
 class DeckScrollArea : public QScrollArea
 {
@@ -49,10 +49,8 @@ class DeckScrollArea : public QScrollArea
 public:
     explicit
     DeckScrollArea(QWidget *parent = nullptr)
-        : QScrollArea(parent) { }
-
-    QSize sizeHint() const override                                 { return QSize(DECKSCROLLIST_HINT_WIDTH,
-                                                                                   DECKSCROLLIST_HINT_HEIGHT); }
+        : QScrollArea(parent)                                       {setSizePolicy(QSizePolicy::MinimumExpanding,
+                                                                                   QSizePolicy::MinimumExpanding);}
 };
 
 class DeckScrollList : public QWidget
@@ -60,46 +58,46 @@ class DeckScrollList : public QWidget
     Q_OBJECT
 public:
     explicit DeckScrollList(QWidget *parent = nullptr);
+    ~DeckScrollList()                                               { clearEntries(); }
 
     QSize sizeHint() const override                                 { return QSize(DECKSCROLLIST_HINT_WIDTH,
                                                                                    DECKSCROLLIST_HINT_HEIGHT); }
 
+    // Adds a new DeckScrollListEntry, and intializes a label,
+    // based on the deck passed as argument.
+    void addEntry(const Deck *d);
+
+    QMap<int, Qt::CheckState> getSelectedDeckIndexes()                { return selectedEntries; }
+
+    // Deletes all previous Labels and clears deckList
+    void clearEntries();
+
 signals:
-    // Upon the user selecting decks a selectionChanged signal gets sent.
-    void selectionChanged(QVector<int> indexes);
     void EditButtonPressedOnEntry(const int &index);
-    void SelectedStateChangedOnEntry(const int &index,
-                                     const Qt::CheckState &state);
+    void languageLockModeChanged(bool lock);
 
 public slots:
-    // changes the text to search for among the titles, and start the timer,
-    // so as to avoid searching every time the SearchBar recieves an input.
-    void changeTextToSearchFor(const QString& text)                  { textToSearchFor = text;
-                                                                          searchTimer->start(300);}
-
-    // Changes the deckTitleList, should be connected to DeckSearcher's DeckTitleListChanged signal,
-    void setDeckTitleList(const QStringList& titles)                 { deckTitleList = titles;
-                                                                          InitTitleLabels(); }
-
-private:
-    // Deletes previous Labels, and initializes new ones,
-    // based on the titles in deckTitleList.
-    void InitTitleLabels();
-
-    //Hides all labels, called by doASearch(), before doing a search
-    void HideAllTitleLabels();
-
     //Searches for textToSearchFor in the deck Titles, and makes the Labels,
     //which correspond to those titles visible
-    void doASearch();
+    void doATitleSearch(const QString &text);
+    void doALanguageSearch(const QString &text);
+
+private:
+    //Hides all labels, called by doASearch(), before doing a search
+    void setHiddenForAllTitleLabels(bool flag);
+    void SelectedStateChangedOnEntry(const int &index,
+                                     const Qt::CheckState &state);
+    void lockLanguages(const QStringList& list);
+    void unlockLanguages();
 
     // Layout is vertical. Labels are listed one after another
     QVBoxLayout *mainLayout;
 
-    QStringList deckTitleList;
     QList<DeckScrollListEntry *> scrollListEntries;
-    QTimer *searchTimer;
-    QString textToSearchFor;
+    QMap<int, Qt::CheckState> selectedEntries;
+
+    bool languageLockMode;
+
 };
 
 #endif // DECKSCROLLLIST_H

@@ -20,14 +20,31 @@
 
 #include "decksearchbar.h"
 
-DeckSearchBar::DeckSearchBar(QWidget *parent)
-    : QLineEdit(parent)
+DeckSearchBarPart::DeckSearchBarPart(const QString& deftext,
+                                           QWidget *parent)
+    : QLineEdit(parent),
+      defaultText(deftext)
 {
-    setText("Search...");
+    searchTimer = new QTimer(this);
+    searchTimer->setSingleShot(true);
+
+    setText(defaultText);
+
+    connect(searchTimer, &QTimer::timeout,
+            [this] () {
+        emit needSearchFor(text());
+    });
+
+    connect(this, &DeckSearchBarPart::textChanged,
+            [this] () {
+        //if(!(text() == defaultText))
+            searchTimer->start(50);
+    });
 }
 
+
 void
-DeckSearchBar::mousePressEvent(QMouseEvent *e){
+DeckSearchBarPart::mousePressEvent(QMouseEvent *e){
     if(e->button() == Qt::LeftButton){
         setText("");
     }
@@ -37,7 +54,48 @@ DeckSearchBar::mousePressEvent(QMouseEvent *e){
 }
 
 void
-DeckSearchBar::focusOutEvent(QFocusEvent *e){
-    setText("Search...");
+DeckSearchBarPart::focusOutEvent(QFocusEvent *e){
+    setText(defaultText);
     QLineEdit::focusOutEvent(e);
 }
+
+
+DeckSearchBar::DeckSearchBar(QWidget *parent)
+    : QWidget(parent),
+      locked(false)
+{
+    titleSearcher = new DeckSearchBarPart("Title...");
+    languageSearcher = new DeckSearchBarPart("Language...");
+    titleSearcher->setAutoFillBackground(true);
+    languageSearcher->setAutoFillBackground(true);
+
+    mainLayout = new QHBoxLayout;
+    mainLayout->addWidget(titleSearcher);
+    mainLayout->addWidget(languageSearcher);
+    mainLayout->setContentsMargins(0,0,0,0);
+
+    setLayout(mainLayout);
+
+    connect(titleSearcher, &DeckSearchBarPart::needSearchFor,
+            this, &DeckSearchBar::NeedTitleSearchFor);
+    connect(languageSearcher, &DeckSearchBarPart::needSearchFor,
+            this, &DeckSearchBar::NeedLanguageSearchFor);
+}
+
+void
+DeckSearchBar::paintEvent(QPaintEvent *e){
+    QPalette pal(titleSearcher->palette());
+    if(locked){
+        pal.setColor(QPalette::Base, Qt::gray);
+        titleSearcher->setPalette(pal);
+        languageSearcher->setPalette(pal);
+    }
+    else{
+        pal.setColor(QPalette::Base, Qt::white);
+        titleSearcher->setPalette(pal);
+        languageSearcher->setPalette(pal);
+
+    }
+    QWidget::paintEvent(e);
+}
+

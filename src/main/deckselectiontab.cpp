@@ -25,25 +25,23 @@ DeckSelectionTab::DeckSelectionTab(QWidget* parent)
 {
     // Setup member widgets
     availableDecksSearcher = new DeckSearcher;
-    availableDecksSearcher->setBottomButtonText("Start");
-    //examDecksSearcher = new DeckSearcher;
-    //examDecksSearcher->setBottomButtonText("Start");
+    availableDecksSearcher->setHideBottomButton(true);
+    examDecksSearcher = new DeckSearcher;
+    examDecksSearcher->setBottomButtonText("Start");
 
     // Setup layout
     mainLayout = new QHBoxLayout;
-    mainLayout->addStretch(1);
     mainLayout->addWidget(availableDecksSearcher);
-    mainLayout->addStretch(25);
-    //mainLayout->addWidget(examDecksSearcher);
-    mainLayout->addStretch(1);
+    mainLayout->addSpacing(25);
+    mainLayout->addWidget(examDecksSearcher);
 
     // Setup this
     setLayout(mainLayout);
 
     // Connections
 
-    connect(this, &DeckSelectionTab::AvailableDeckTitlesChanged,
-            availableDecksSearcher, &DeckSearcher::setDeckTitleList);
+    connect(this, &DeckSelectionTab::AvailableDecksChanged,
+            availableDecksSearcher, &DeckSearcher::setDeck);
 
     //connect(examDecksSearcher, &DeckSearcher::SelectionChanged,
     //        this, &DeckSelectionTab::setExamDecksSelectedIndexes);
@@ -54,9 +52,6 @@ DeckSelectionTab::DeckSelectionTab(QWidget* parent)
     connect(availableDecksSearcher, &DeckSearcher::EditButtonPressedOnEntry,
             this, &DeckSelectionTab::SignalToEditAvailableDeckAt);
 
-    connect(availableDecksSearcher, &DeckSearcher::SelectedStateChangedOnEntry,
-            this, &DeckSelectionTab::changeSelectedAvailableDecksList);
-
     // Temporary
     connect(availableDecksSearcher, &DeckSearcher::bottomButtonPressed,
             this, &DeckSelectionTab::StartExam);
@@ -66,7 +61,6 @@ DeckSelectionTab::DeckSelectionTab(QWidget* parent)
 void
 DeckSelectionTab::LoadAvailableDecks(){
     availableDecks.clear();
-    availableDecksSelectionIndexes.clear();
 
     QDir resDir("./res");
     QStringList entries = resDir.entryList(QStringList{"*.deck"});
@@ -78,23 +72,18 @@ DeckSelectionTab::LoadAvailableDecks(){
         }
     }
 
-    QStringList deckTitlesList;
-    for(auto &deck : availableDecks){
-        deckTitlesList.append(deck.getTitle());
-    }
-
-    for(int i = 0; i < availableDecks.size(); ++i)
-        availableDecksSelectionIndexes.push_back(Qt::Unchecked);
-
-    emit AvailableDeckTitlesChanged(deckTitlesList);
+    std::sort(availableDecks.begin(), availableDecks.end());
+    emit AvailableDecksChanged(availableDecks);
 }
 
 void
 DeckSelectionTab::StartExam(){
     currExamDeck = QSharedPointer<Deck>(new Deck);
-    for(int i = 0; i < availableDecksSelectionIndexes.size(); ++i){
-        if(availableDecksSelectionIndexes[i] == Qt::Checked)
-            currExamDeck.data()->mergeDeck(availableDecks[i]);
+    QMap<int, Qt::CheckState>::const_iterator begin = availableDecksSearcher->selection().constBegin();
+    QMap<int, Qt::CheckState>::const_iterator end = availableDecksSearcher->selection().constEnd();
+    while(begin != end){
+        currExamDeck.data()->mergeDeck(availableDecks[begin.key()]);
+        ++begin;
     }
     if(!currExamDeck.data()->empty()){
         emit ExamToStartWithDeck(currExamDeck.toWeakRef());

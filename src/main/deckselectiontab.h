@@ -27,6 +27,8 @@
 #include<QStringList>
 #include<QMap>
 
+#include<algorithm>
+
 #include "windowdefines.h"
 #include "decksearcher.h"
 #include "deckloader.h"
@@ -49,16 +51,11 @@ signals:
     void ExamToStartWithDeck(const QWeakPointer<Deck>& deck);
 
     // Send out a signal with the new titles of the decks
-    void AvailableDeckTitlesChanged(const QStringList &titles);
+    void AvailableDecksChanged(const QList<Deck> &decklist);
 
     void ToEditDeck(const Deck& deck);
 
 public slots:
-
-    inline
-    void changeSelectedAvailableDecksList(const int &index,
-                                          Qt::CheckState state)         { availableDecksSelectionIndexes[index] = state; }
-
     //inline
     //void chaneSelectedExamDecksList(const int &index,
     //                                Qt::CheckState state);            { examDecksSelectionIndexes[index] = state; }
@@ -83,8 +80,6 @@ private:
 
     QList<Deck> availableDecks;
     QList<Deck> examDecks;
-    QVector<Qt::CheckState> availableDecksSelectionIndexes;
-    QVector<Qt::CheckState> examDecksSelectionIndexes;
 
     QSharedPointer<Deck> currExamDeck;
 

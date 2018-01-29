@@ -37,24 +37,46 @@
 #include<QPainter>
 #include<QMouseEvent>
 
-const static unsigned int DECKSCROLLISTENTRY_HINT_WIDTH = 100;
-const static unsigned int DECKSCROLLISTENTRY_HINT_HEIGHT = 20;
+class DeckLabel : public QLabel
+{
+    Q_OBJECT
+public:
+    explicit
+    DeckLabel(QWidget *parent = nullptr)
+        : QLabel(parent)                                    { setSizePolicy(QSizePolicy::Minimum,
+                                                                            QSizePolicy::Expanding);
+                                                              setMaximumWidth(120);}
+
+    explicit
+    DeckLabel(const QString& label,
+              QWidget *parent = nullptr)
+        : QLabel(label, parent)                             { setSizePolicy(QSizePolicy::Minimum,
+                                                                            QSizePolicy::Expanding);
+                                                              setMaximumWidth(120);}
+
+    QSize sizeHint() const override                         { return QSize(120,20); }
+    QSize minimumSizeHint() const override                  { return QSize(120,20); }
+};
 
 class DeckScrollListEntry : public QWidget
 {
     Q_OBJECT
 public:
     explicit
-    DeckScrollListEntry(const QString& title,
-                        int index,
+    DeckScrollListEntry(int index,
+                        const QString& title,
+                        const QStringList &langs,
                         QWidget *parent = nullptr);
 
-    QSize sizeHint() const override                         { return QSize(DECKSCROLLISTENTRY_HINT_WIDTH,
-                                                                           DECKSCROLLISTENTRY_HINT_HEIGHT); }
+    QSize sizeHint() const override                         { return QSize(300,35); }
+    QSize minimumSizeHint() const override                  { return QSize(300,35); }
 
     // Used to determine whether the this widget,
     // that refers to a deck is selected
     bool isSelected()                                       { return selectedCheckBox->isChecked(); }
+
+    QString getTitle()                                      { return titleLabel->text(); }
+    QStringList getLanguages()                              { return languages; }
 
 signals:
     void EditButtonPressed(const int &index);
@@ -78,11 +100,13 @@ private:
     // store the selection state for every DeckScrolLListEntry.
     void SendSignalSelectedStateChanged()                   { emit SelectedStateChanged(id, selectedCheckBox->checkState()); }
     QHBoxLayout *mainLayout;
+    int id;
 
     QCheckBox *selectedCheckBox;
-    QLabel *titleLabel;
+    DeckLabel *titleLabel;
+    DeckLabel *languageLabel;
     QPushButton *editButton;
-    int id;
+    QStringList languages;
 };
 
 #endif // DECKSCROLLLISTENTRY_H

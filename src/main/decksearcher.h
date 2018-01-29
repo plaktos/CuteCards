@@ -44,7 +44,7 @@
 #include "deck.h"
 #include "windowdefines.h"
 
-const static unsigned int DECKSEARCHER_HINT_WIDTH = MAINWINDOW_HINT_WIDTH/3;
+const static unsigned int DECKSEARCHER_HINT_WIDTH = MAINWINDOW_HINT_WIDTH/2;
 const static unsigned int DECKSEARCHER_HINT_HEIGHT = MAINWINDOW_HINT_HEIGHT - 50;
 
 class DeckSearcher : public QWidget
@@ -53,30 +53,28 @@ class DeckSearcher : public QWidget
 public:
     explicit DeckSearcher(QWidget *parent = nullptr);
 
-    QSize sizeHint() const override                             { return QSize(DECKSEARCHER_HINT_WIDTH,
-                                                                               DECKSEARCHER_HINT_HEIGHT); }
+    //QSize sizeHint() const override                             { return QSize(DECKSEARCHER_HINT_WIDTH,
+    //                                                                           DECKSEARCHER_HINT_HEIGHT); }
 
     void setBottomButtonText(const QString &text)               { bottomButton->setText(text); }
 
     // Returns the selectionIndexes that are set by recieving a signal
     // to changeSelection
-    QVector<int> selection()                                    { return selectionIndexes; }
-    void setHideBottomButton(bool b)                                     { bottomButton->setHidden(b); }
+    QMap<int, Qt::CheckState> selection()                       { return deckScrollList->getSelectedDeckIndexes(); }
+    void setHideBottomButton(bool b)                            { bottomButton->setHidden(b); }
 
 signals:
     void bottomButtonPressed();
 
-    // Just for forwarding the titles to the member DeckScrollList
-    void DeckTitleListChanged(const QStringList &titles);
-
     void EditButtonPressedOnEntry(const int &index);
-    void SelectedStateChangedOnEntry(const int &index,
-                                     const Qt::CheckState &state);
 
 public slots:
-    void setDeckTitleList(const QStringList &titles)         { emit DeckTitleListChanged(titles); }
+    void setDeck(const QList<Deck> &newdeck)                  { decks = &newdeck;
+                                                                refillScrollList(); }
 
 private:
+    void refillScrollList();
+
     // Layout for this. Vertical layout, on the top is the DeckSearchBar,
     // Below that is the DeckScroll list, and on the bottom is a button
     QVBoxLayout *mainLayout;
@@ -85,7 +83,7 @@ private:
     DeckScrollList *deckScrollList;
     QPushButton *bottomButton;
 
-    QVector<int> selectionIndexes;
+    const QList<Deck> *decks;
 };
 
 #endif // DECKSEARCHER_H

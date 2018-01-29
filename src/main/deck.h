@@ -63,6 +63,10 @@ struct Deck{
     inline
     QList<Flashcard> getCards() const               { return cards; }
 
+
+    bool operator<(const Deck &rhs) const           { return getTitle() < rhs.getTitle() ?
+                                                      true :false; }
+
     inline
     bool operator==(const Deck& other) const        { return (title == other.title) &&
                                                              (languages == other.languages) &&
@@ -87,7 +91,7 @@ struct Deck{
     QString getTitle() const                        { return title; }
 
     inline
-    QStringList getLanguages() const             { return languages; }
+    QStringList getLanguages() const                { return languages; }
 
     inline
     size_t size() const                             { return cards.size(); }
