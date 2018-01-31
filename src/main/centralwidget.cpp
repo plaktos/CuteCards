@@ -28,22 +28,24 @@ CentralWidget::CentralWidget(QWidget *parent)
     tabSelector = new TabSelector;
     examTab = new ExamTab;
     deckSelectionTab = new DeckSelectionTab;
-    //deckEditorTab = new DeckEditorTab;
+    deckEditorTab = new DeckEditorTab;
     //statisticsTab = new StatisticsTab;
 
     // Hide all tabs initially
     deckSelectionTab->setHidden(true);
     examTab->setHidden(true);
-    //deckEditorTab->setHidden(true);
+    deckEditorTab->setHidden(true);
     //statisticsTab->setHidden(true);
 
     // Initialize the Layout and add the widgets
-    mainLayout = new QVBoxLayout;
-    mainLayout->addWidget(tabSelector);
+    mainLayout = new QHBoxLayout;
+    mainLayout->setSpacing(0);
+    mainLayout->setContentsMargins(0,0,0,0);
     mainLayout->addWidget(examTab);
     mainLayout->addWidget(deckSelectionTab);
-    //mainLayout->addWidget(deckEditorTab);
+    mainLayout->addWidget(deckEditorTab);
     //mainLayout->addWidget(statisticsTab);
+    mainLayout->addWidget(tabSelector);
 
     // Setup this
     setLayout(mainLayout);
@@ -61,8 +63,8 @@ CentralWidget::CentralWidget(QWidget *parent)
     connect(deckSelectionTab, &DeckSelectionTab::ExamToStartWithDeck,
             this, &CentralWidget::StartExamWithDeck);
 
-    //connect(deckSelectionTab, &DeckSelectionTab::ToEditDeck,
-    //        deckEditorTab, &DeckEditor::EditDeck);
+    connect(deckSelectionTab, &DeckSelectionTab::ToEditDeck,
+            this, &CentralWidget::StartDeckEditorWithDeck);
 
     //Start off with Deck Selection.
     //Change later to a welcome tab
@@ -73,7 +75,7 @@ void
 CentralWidget::HideAllTabs(){
     examTab->setHidden(true);
     deckSelectionTab->setHidden(true);
-    //deckEditorTab->setHidden(true);
+    deckEditorTab->setHidden(true);
     //statisticsTab->setHidden(true);
 }
 
@@ -104,12 +106,16 @@ void
 CentralWidget::changeToDeckEditorTab(){
 
     //If exam is running, abort it
-    /*
-    if(deckEditorTab->isHidden()){
-        HideAllTabs();
-        deckEditorTab->setHidden(false);
-    }
-    */
+    deckEditorTab->loadDeck(Deck());
+    HideAllTabs();
+    deckEditorTab->setHidden(false);
+}
+
+void
+CentralWidget::StartDeckEditorWithDeck(const Deck& deck){
+    deckEditorTab->loadDeck(deck);
+    HideAllTabs();
+    deckEditorTab->setHidden(false);
 }
 
 void

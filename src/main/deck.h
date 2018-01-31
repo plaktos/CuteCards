@@ -55,10 +55,10 @@ struct Deck{
             keyIndex(1) {}
 
     inline
-    Flashcard operator[](int i) const               { return cards.at(i); }
+    Flashcard& operator[](int i)                    { return cards[i]; }
 
     inline
-    Flashcard at(int i)                             { return this->operator [](i); }
+    const Flashcard& at(int i) const                { return cards.at(i); }
 
     inline
     QList<Flashcard> getCards() const               { return cards; }
@@ -86,6 +86,9 @@ struct Deck{
 
     void
     mergeDeck(const Deck& other)                    { cards += other.getCards(); }
+
+    inline
+    void removeAt(int i)                            { cards.removeAt(i); }
 
     inline
     QString getTitle() const                        { return title; }

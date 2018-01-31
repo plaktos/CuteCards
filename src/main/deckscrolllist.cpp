@@ -22,11 +22,13 @@
 
 DeckScrollList::DeckScrollList(QWidget *parent)
     : QWidget(parent),
-      languageLockMode(false)
+      languageLockMode(false), selectionActive(false),
+      emptyTitleSearch(true)
 {
 
     // Layout setup
     mainLayout = new QVBoxLayout;
+    mainLayout->setSpacing(0);
     mainLayout->setSizeConstraint(QLayout::SetFixedSize);
     mainLayout->setAlignment(Qt::AlignLeft);
     mainLayout->setContentsMargins(0,0,0,0);
@@ -36,45 +38,135 @@ DeckScrollList::DeckScrollList(QWidget *parent)
     setLayout(mainLayout);
     setSizePolicy(QSizePolicy::MinimumExpanding,
                   QSizePolicy::MinimumExpanding);
+
 }
 
 void
-DeckScrollList::setHiddenForAllTitleLabels(bool flag){
-    for(auto entry : scrollListEntries){
+DeckScrollList::setHiddenForEntryAt(int index, bool flag){
+    scrollListEntries[index]->setHidden(flag);
+}
+
+void
+DeckScrollList::setHiddenForAllEntry(bool flag){
+    for(auto &entry : scrollListEntries){
         entry->setHidden(flag);
     }
 }
 
 void
 DeckScrollList::doATitleSearch(const QString& text){
-    selectedEntries.clear();
-    if(text == "Title..."){
-        setHiddenForAllTitleLabels(false);
-    }else{
-        setHiddenForAllTitleLabels(true);
-        for(auto entry : scrollListEntries){
-            if(entry->getTitle().contains(text)){
-                entry->setHidden(false);
+    if(!(text == "")){
+        emptyTitleSearch = false;
+        // If language lock mode is active we only search in the
+        // ones that are already shown, and we set the ones,
+        // that dont match the title to not be shown
+        if(languageLockMode){
+            for(int i = 0; i < scrollListEntries.size(); ++i){
+                if(searchedEntries[i] == true){
+                    if(!(scrollListEntries[i]->getTitle().contains(text, Qt::CaseInsensitive)))
+                        searchedEntries[i] = false;
+                }
+            }
+        }
+        // If language lock mode is off we search in all of the entries
+        else{
+            for(int i = 0; i < scrollListEntries.size(); ++i){
+                if(scrollListEntries[i]->getTitle().contains(text, Qt::CaseInsensitive))
+                    searchedEntries[i] = true;
+                else
+                    searchedEntries[i] = false;
             }
         }
     }
+    else{
+        emptyTitleSearch = true;
+        for(int i = 0; i < scrollListEntries.size(); ++i){
+            searchedEntries[i] = true;
+        }
+    }
+    refreshEntries();
 }
 
 void
 DeckScrollList::doALanguageSearch(const QString& text){
-    selectedEntries.clear();
-    if(text == "Language..."){
-        setHiddenForAllTitleLabels(false);
-    }else{
-        setHiddenForAllTitleLabels(true);
-        for(auto entry : scrollListEntries){
-            for(auto language : entry->getLanguages()){
-                if(language.contains(text)){
-                    entry->setHidden(false);
-                }
+    if(!(text == "")){
+        for(int i = 0; i < scrollListEntries.size(); ++i){
+            for(QString &lang : scrollListEntries[i]->getLanguages()){
+                if(lang.contains(text, Qt::CaseInsensitive))
+                    searchedEntries[i] = true;
+                else
+                    searchedEntries[i] = false;
             }
         }
     }
+    else{
+        for(auto entry : scrollListEntries)
+            entry->setHidden(false);
+    }
+    refreshEntries();
+}
+
+void
+DeckScrollList::setSelectedForEntryAt(const int &index, const bool &flag){
+    selectedEntries[index] = flag;
+
+    QMap<int, bool>::const_iterator begin = selectedEntries.constBegin();
+    QMap<int, bool>::const_iterator end = selectedEntries.constEnd();
+
+    selectionActive = false;
+    while(begin != end){
+        if(begin.value() == true){
+            selectionActive = true;
+            lockLanguages(scrollListEntries[index]->getLanguages());
+            break;
+        }
+        ++begin;
+    }
+    if(!selectionActive){
+        unlockLanguages();
+    }
+    refreshEntries();
+}
+
+void
+DeckScrollList::refreshEntries(){
+    setHiddenForAllEntry(true);
+
+    // If there are selections we have to check if the flag for the entry's index
+    // is set to true in both searchedEntries and selectedEntries
+    if(selectionActive){
+        for(int i = 0; i < scrollListEntries.size(); ++i){
+            // if selected entries contains the index and it is true
+            //(the second argument is the default value in case index is not in selectedEntries.
+            if(selectedEntries.value(i, false) ||
+               (!emptyTitleSearch && searchedEntries[i] == true && languageMatchedEntries.value(i,false))||
+               (emptyTitleSearch && languageMatchedEntries.value(i, false)))
+                    scrollListEntries[i]->setHidden(false);
+        }
+    }
+    // if there are no selections we just check if the flag for the
+    // corresponding index in searchedEntries is set to true
+    //
+    else{
+        for(int i = 0; i < scrollListEntries.size(); ++i){
+            if(searchedEntries[i] == true){
+                scrollListEntries[i]->setHidden(false);
+            }
+        }
+    }
+    resize(sizeHint());
+}
+
+QVector<int>
+DeckScrollList::getSelectedEntries(){
+    QVector<int> indexes;
+    QMap<int, bool>::const_iterator begin = selectedEntries.constBegin();
+    QMap<int, bool>::const_iterator end = selectedEntries.constEnd();
+    while(begin != end){
+        indexes.push_back(begin.key());
+        ++begin;
+    }
+    return indexes;
 }
 
 void
@@ -83,16 +175,21 @@ DeckScrollList::clearEntries(){
         delete entry;
     }
     scrollListEntries.clear();
+    selectedEntries.clear();
+    searchedEntries.clear();
+    languageMatchedEntries.clear();
+    selectionActive = false;
+    unlockLanguages();
 }
 
 void
 DeckScrollList::lockLanguages(const QStringList &list){
     languageLockMode = true;
-    setHiddenForAllTitleLabels(true);
-    for(auto entry : scrollListEntries){
-        if(entry->getLanguages() == list){
-            entry->setHidden(false);
-        }
+    for(int i = 0; i < scrollListEntries.size(); ++i){
+        if(scrollListEntries[i]->getLanguages() == list)
+            languageMatchedEntries[i] = true;
+        else
+            languageMatchedEntries[i] = false;
     }
     emit languageLockModeChanged(true);
 }
@@ -100,24 +197,8 @@ DeckScrollList::lockLanguages(const QStringList &list){
 void
 DeckScrollList::unlockLanguages(){
     languageLockMode = false;
-    setHiddenForAllTitleLabels(false);
+    languageMatchedEntries.clear();
     emit languageLockModeChanged(false);
-}
-
-void
-DeckScrollList::SelectedStateChangedOnEntry(const int &index, const Qt::CheckState &state){
-    if(state == Qt::Unchecked){
-        selectedEntries.remove(index);
-    } else{
-        selectedEntries[index] = state;
-    }
-
-    if(!languageLockMode){
-        lockLanguages(scrollListEntries[index]->getLanguages());
-    }
-    else if(selectedEntries.size() == 0){
-        unlockLanguages();
-    }
 }
 
 void
@@ -125,10 +206,11 @@ DeckScrollList::addEntry(const Deck *d){
     DeckScrollListEntry *newEntry = new DeckScrollListEntry(scrollListEntries.size(),
                                                             d->getTitle(),
                                                             d->getLanguages());
+    searchedEntries[scrollListEntries.size()] = true;
     scrollListEntries.append(newEntry);
     mainLayout->insertWidget(mainLayout->count()-1,newEntry);
     connect(newEntry, &DeckScrollListEntry::EditButtonPressed,
             this, &DeckScrollList::EditButtonPressedOnEntry);
     connect(newEntry, &DeckScrollListEntry::SelectedStateChanged,
-            this, &DeckScrollList::SelectedStateChangedOnEntry);
+            this, &DeckScrollList::setSelectedForEntryAt);
 }

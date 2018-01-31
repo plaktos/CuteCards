@@ -38,6 +38,7 @@
 #include<QVBoxLayout>
 #include<QSizePolicy>
 #include<QPushButton>
+#include<QPalette>
 
 #include "decksearchbar.h"
 #include "deckscrolllist.h"
@@ -60,7 +61,7 @@ public:
 
     // Returns the selectionIndexes that are set by recieving a signal
     // to changeSelection
-    QMap<int, Qt::CheckState> selection()                       { return deckScrollList->getSelectedDeckIndexes(); }
+    QVector<int> selection()                                    { return deckScrollList->getSelectedEntries(); }
     void setHideBottomButton(bool b)                            { bottomButton->setHidden(b); }
 
 signals:

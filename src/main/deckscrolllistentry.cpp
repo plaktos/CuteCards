@@ -25,11 +25,12 @@ DeckScrollListEntry::DeckScrollListEntry(int index,
                                          const QStringList &langs,
                                          QWidget *parent)
     : QWidget(parent),
-      id(index),
+      id(index),selected(false),
       languages(langs)
 {
     // Setup members
-    selectedCheckBox = new QCheckBox;
+    selectedCheckBox = new QCheckBox(this);
+    selectedCheckBox->setVisible(false);
     titleLabel = new DeckLabel(title);
 
     languageLabel = new DeckLabel;
@@ -49,24 +50,41 @@ DeckScrollListEntry::DeckScrollListEntry(int index,
     // Setup Layout
     mainLayout = new QHBoxLayout;
     mainLayout->setAlignment(Qt::AlignLeft);
-    mainLayout->addWidget(selectedCheckBox);
-    mainLayout->addWidget(titleLabel);
     mainLayout->addWidget(editButton);
+    mainLayout->addWidget(titleLabel);
     mainLayout->addSpacing(10);
     mainLayout->addWidget(languageLabel);
-    mainLayout->addStretch(1);
 
     // Setup this
     setLayout(mainLayout);
-    setSizePolicy(QSizePolicy::MinimumExpanding,
+    setSizePolicy(QSizePolicy::Expanding,
                   QSizePolicy::Fixed);
+    setAutoFillBackground(true);
 
     // Connections
     connect(editButton, &QPushButton::pressed,
             this, &DeckScrollListEntry::SendSignalEditButtonPressed);
 
     connect(selectedCheckBox, &QCheckBox::stateChanged,
-            this, &DeckScrollListEntry::SendSignalSelectedStateChanged);
+            [this](){
+        selected = selectedCheckBox->isChecked();
+        emit SelectedStateChanged(id,selected);
+    });
+}
+
+void
+DeckScrollListEntry::paintEvent(QPaintEvent *event){
+    QPalette pal(palette());
+    if(selected){
+        pal.setColor(QPalette::WindowText, Qt::green);
+        setPalette(pal);
+    }
+    else{
+        pal.setColor(QPalette::WindowText, Qt::black);
+        setPalette(pal);
+
+    }
+    update();
 }
 
 void

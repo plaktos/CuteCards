@@ -25,15 +25,11 @@ DeckSelectionTab::DeckSelectionTab(QWidget* parent)
 {
     // Setup member widgets
     availableDecksSearcher = new DeckSearcher;
-    availableDecksSearcher->setHideBottomButton(true);
-    examDecksSearcher = new DeckSearcher;
-    examDecksSearcher->setBottomButtonText("Start");
+    availableDecksSearcher->setBottomButtonText("Start");
 
     // Setup layout
-    mainLayout = new QHBoxLayout;
-    mainLayout->addWidget(availableDecksSearcher);
-    mainLayout->addSpacing(25);
-    mainLayout->addWidget(examDecksSearcher);
+    mainLayout = new QGridLayout;
+    mainLayout->addWidget(availableDecksSearcher, 0,0,1,1);
 
     // Setup this
     setLayout(mainLayout);
@@ -42,12 +38,6 @@ DeckSelectionTab::DeckSelectionTab(QWidget* parent)
 
     connect(this, &DeckSelectionTab::AvailableDecksChanged,
             availableDecksSearcher, &DeckSearcher::setDeck);
-
-    //connect(examDecksSearcher, &DeckSearcher::SelectionChanged,
-    //        this, &DeckSelectionTab::setExamDecksSelectedIndexes);
-
-    //connect(examDecksSearcher, &DeckSearcher::bottomButtonPressed,
-    //        this, &DeckSelectionTab::StartExam);
 
     connect(availableDecksSearcher, &DeckSearcher::EditButtonPressedOnEntry,
             this, &DeckSelectionTab::SignalToEditAvailableDeckAt);
@@ -79,11 +69,9 @@ DeckSelectionTab::LoadAvailableDecks(){
 void
 DeckSelectionTab::StartExam(){
     currExamDeck = QSharedPointer<Deck>(new Deck);
-    QMap<int, Qt::CheckState>::const_iterator begin = availableDecksSearcher->selection().constBegin();
-    QMap<int, Qt::CheckState>::const_iterator end = availableDecksSearcher->selection().constEnd();
-    while(begin != end){
-        currExamDeck.data()->mergeDeck(availableDecks[begin.key()]);
-        ++begin;
+    QVector<int> indexes = availableDecksSearcher->selection();
+    for(int i = 0; i < indexes.size(); i++){
+        currExamDeck.data()->mergeDeck(availableDecks[indexes[i]]);
     }
     if(!currExamDeck.data()->empty()){
         emit ExamToStartWithDeck(currExamDeck.toWeakRef());

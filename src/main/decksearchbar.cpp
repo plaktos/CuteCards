@@ -22,13 +22,12 @@
 
 DeckSearchBarPart::DeckSearchBarPart(const QString& deftext,
                                            QWidget *parent)
-    : QLineEdit(parent),
-      defaultText(deftext)
+    : QLineEdit(parent)
 {
     searchTimer = new QTimer(this);
     searchTimer->setSingleShot(true);
 
-    setText(defaultText);
+    setPlaceholderText(deftext);
 
     connect(searchTimer, &QTimer::timeout,
             [this] () {
@@ -37,26 +36,15 @@ DeckSearchBarPart::DeckSearchBarPart(const QString& deftext,
 
     connect(this, &DeckSearchBarPart::textChanged,
             [this] () {
-        //if(!(text() == defaultText))
-            searchTimer->start(50);
+        searchTimer->start(50);
     });
 }
 
-
 void
 DeckSearchBarPart::mousePressEvent(QMouseEvent *e){
-    if(e->button() == Qt::LeftButton){
+    if(!hasFocus()){
         setText("");
     }
-    else{
-        QLineEdit::mousePressEvent(e);
-    }
-}
-
-void
-DeckSearchBarPart::focusOutEvent(QFocusEvent *e){
-    setText(defaultText);
-    QLineEdit::focusOutEvent(e);
 }
 
 
@@ -87,12 +75,10 @@ DeckSearchBar::paintEvent(QPaintEvent *e){
     QPalette pal(titleSearcher->palette());
     if(locked){
         pal.setColor(QPalette::Base, Qt::gray);
-        titleSearcher->setPalette(pal);
         languageSearcher->setPalette(pal);
     }
     else{
         pal.setColor(QPalette::Base, Qt::white);
-        titleSearcher->setPalette(pal);
         languageSearcher->setPalette(pal);
 
     }

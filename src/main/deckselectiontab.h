@@ -26,6 +26,7 @@
 #include<QDir>
 #include<QStringList>
 #include<QMap>
+#include<QGridLayout>
 
 #include<algorithm>
 
@@ -73,7 +74,7 @@ public slots:
 protected:
 
 private:
-    QHBoxLayout *mainLayout;
+    QGridLayout *mainLayout;
 
     DeckSearcher *availableDecksSearcher;
     DeckSearcher *examDecksSearcher;

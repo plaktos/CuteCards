@@ -28,14 +28,19 @@ DeckSearcher::DeckSearcher(QWidget *parent)
     deckSearchBar = new DeckSearchBar;
     deckScrollList = new DeckScrollList;
     bottomButton = new QPushButton;
+    bottomButton->setMaximumWidth(200);
 
     // Add QScrollArea to deckScrollList
     DeckScrollArea *scrollArea = new DeckScrollArea;
     scrollArea->setWidget(deckScrollList);
-    scrollArea->setBackgroundRole(QPalette::Midlight);
+    QPalette scrollAreaPalette(scrollArea->palette());
+    scrollAreaPalette.setColor(QPalette::Background, Qt::darkGray);
+    scrollArea->setAutoFillBackground(true);
+    scrollArea->setPalette(scrollAreaPalette);
 
     // Setup layout
     mainLayout = new QVBoxLayout;
+    mainLayout->setAlignment(Qt::AlignCenter);
     mainLayout->addWidget(deckSearchBar);
     mainLayout->addWidget(scrollArea);
     mainLayout->addWidget(bottomButton);
@@ -58,7 +63,7 @@ DeckSearcher::DeckSearcher(QWidget *parent)
             this, &DeckSearcher::EditButtonPressedOnEntry);
 
     connect(deckScrollList, &DeckScrollList::languageLockModeChanged,
-            deckSearchBar, &DeckSearchBar::setLock);
+            deckSearchBar, &DeckSearchBar::setLanguageLock);
 }
 
 void

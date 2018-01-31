@@ -42,17 +42,15 @@ class DeckSearchBarPart : public QLineEdit
     Q_OBJECT
 public:
     DeckSearchBarPart(const QString& deftext,
-                       QWidget* parent = nullptr);
+                      QWidget* parent = nullptr);
 
 signals:
     void needSearchFor(const QString& text);
 
 protected:
     void mousePressEvent(QMouseEvent *e) override;
-    void focusOutEvent(QFocusEvent *e) override;
 
 private:
-    QString defaultText;
     QTimer *searchTimer;
 };
 
@@ -68,7 +66,7 @@ signals:
     void NeedLanguageSearchFor(const QString& text);
 
 public slots:
-    void setLock(bool lock)                     { titleSearcher->setReadOnly(lock);
+    void setLanguageLock(bool lock)             { //titleSearcher->setReadOnly(lock);
                                                   languageSearcher->setReadOnly(lock);
                                                   locked = lock;
                                                   update(); }

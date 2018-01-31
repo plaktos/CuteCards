@@ -13,6 +13,15 @@ SOURCES += \
         ../src/main/decksearchbar.cpp \
         ../src/main/deckscrolllist.cpp \
         ../src/main/deckscrolllistentry.cpp \
+        ../src/main/deckeditortab.cpp \
+        ../src/main/wordsearcher.cpp \
+        ../src/main/wordeditor.cpp \
+        ../src/main/deckeditorsavebar.cpp\
+        ../src/main/wordscrolllist.cpp \
+        ../src/main/wordscrolllistentry.cpp \
+        ../src/main/wordsearcherbar.cpp \
+        ../src/main/wordeditorscrolllist.cpp \
+
 
 
 HEADERS += \
@@ -30,3 +39,11 @@ HEADERS += \
         ../src/main/deckscrolllist.h \
         ../src/main/windowdefines.h \
         ../src/main/deckscrolllistentry.h \
+        ../src/main/deckeditortab.h \
+        ../src/main/wordsearcher.h \
+        ../src/main/wordeditor.h \
+        ../src/main/deckeditorsavebar.h \
+        ../src/main/wordscrolllist.h \
+        ../src/main/wordscrolllistentry.h \
+        ../src/main/wordsearcherbar.h \
+        ../src/main/wordeditorscrolllist.h \

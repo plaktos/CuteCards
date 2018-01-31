@@ -24,26 +24,29 @@ TabSelector::TabSelector(QWidget *parent)
     : QWidget(parent)
 {
     //Change to custom buttons later
-    deckSelectionTabButton = new QPushButton("New Exam");
-    deckEditorTabButton = new QPushButton("Editor");
-    statisticsTabButton = new QPushButton("Statistics");
-    deckSelectionTabButton->resize(CENTRAL_TABSELECTOR_BUTTONS_HINT_WIDTH, deckSelectionTabButton->height());
-    deckEditorTabButton->resize(CENTRAL_TABSELECTOR_BUTTONS_HINT_WIDTH, deckEditorTabButton->height());
-    statisticsTabButton->resize(CENTRAL_TABSELECTOR_BUTTONS_HINT_WIDTH, statisticsTabButton->height());
+    deckSelectionTabButton = new TabButton("New");
+    deckEditorTabButton = new TabButton("Editor");
+    statisticsTabButton = new TabButton("Stats");
     deckSelectionTabButton->setFocusPolicy(Qt::NoFocus);
     deckEditorTabButton->setFocusPolicy(Qt::NoFocus);
     statisticsTabButton->setFocusPolicy(Qt::NoFocus);
 
-    mainLayout = new QHBoxLayout;
+    mainLayout = new QVBoxLayout;
+    mainLayout->setSpacing(5);
+    mainLayout->addStretch(1);
     mainLayout->setAlignment(Qt::AlignCenter);
     mainLayout->addWidget(deckSelectionTabButton);
     mainLayout->addWidget(deckEditorTabButton);
     mainLayout->addWidget(statisticsTabButton);
-    mainLayout->setSpacing(25);
+    mainLayout->addStretch(1);
 
-    setBackgroundRole(QPalette::Shadow);
+    QPalette pal(palette());
+    pal.setColor(QPalette::Background, Qt::gray);
 
     setLayout(mainLayout);
+    setPalette(pal);
+    setAutoFillBackground(true);
+    setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Expanding);
 
     connect(deckSelectionTabButton, SIGNAL(pressed()),
             this, SIGNAL(DeckSelectionTabSelected()));

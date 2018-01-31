@@ -43,19 +43,18 @@ class DeckLabel : public QLabel
 public:
     explicit
     DeckLabel(QWidget *parent = nullptr)
-        : QLabel(parent)                                    { setSizePolicy(QSizePolicy::Minimum,
-                                                                            QSizePolicy::Expanding);
-                                                              setMaximumWidth(120);}
+        : QLabel(parent)                                    { setSizePolicy(QSizePolicy::Fixed,
+                                                                            QSizePolicy::Fixed);
+                                                            setMaximumWidth(200);}
 
     explicit
     DeckLabel(const QString& label,
               QWidget *parent = nullptr)
-        : QLabel(label, parent)                             { setSizePolicy(QSizePolicy::Minimum,
-                                                                            QSizePolicy::Expanding);
-                                                              setMaximumWidth(120);}
+        : QLabel(label, parent)                             { setSizePolicy(QSizePolicy::Fixed,
+                                                                            QSizePolicy::Fixed);
+                                                            setMaximumWidth(200);}
 
-    QSize sizeHint() const override                         { return QSize(120,20); }
-    QSize minimumSizeHint() const override                  { return QSize(120,20); }
+    QSize sizeHint() const override                         { return QSize(200,35); }
 };
 
 class DeckScrollListEntry : public QWidget
@@ -63,13 +62,16 @@ class DeckScrollListEntry : public QWidget
     Q_OBJECT
 public:
     explicit
+    DeckScrollListEntry(QWidget *parent = nullptr)
+        : QWidget(parent) {}
+
+    explicit
     DeckScrollListEntry(int index,
                         const QString& title,
                         const QStringList &langs,
                         QWidget *parent = nullptr);
 
-    QSize sizeHint() const override                         { return QSize(300,35); }
-    QSize minimumSizeHint() const override                  { return QSize(300,35); }
+    QSize sizeHint() const override                         { return QSize(400,35); }
 
     // Used to determine whether the this widget,
     // that refers to a deck is selected
@@ -80,14 +82,13 @@ public:
 
 signals:
     void EditButtonPressed(const int &index);
-
-    // Send a signal if the selection regarding this widget has changed
-    void SelectedStateChanged(const int &index, const Qt::CheckState& state);
+    void SelectedStateChanged(const int &index, const bool &flag);
 
 protected:
     // Overriding the mouse press event. If the user clicks on the widget,
     // it gets selected
     void mousePressEvent(QMouseEvent * e) override;
+    void paintEvent(QPaintEvent *event) override;
 
 private:
     // Send an edit button pressed signal with the id of this widget.
@@ -95,12 +96,9 @@ private:
     // the deck this widget corresponds to.
     void SendSignalEditButtonPressed()                      { emit EditButtonPressed(id); }
 
-    // Send a state change signal with the id of this widget,
-    // this gets forwarded to DeckSelectionTab, where we
-    // store the selection state for every DeckScrolLListEntry.
-    void SendSignalSelectedStateChanged()                   { emit SelectedStateChanged(id, selectedCheckBox->checkState()); }
     QHBoxLayout *mainLayout;
     int id;
+    bool selected;
 
     QCheckBox *selectedCheckBox;
     DeckLabel *titleLabel;

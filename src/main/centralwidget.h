@@ -36,6 +36,7 @@
 #include "tabselector.h"
 #include "examtab.h"
 #include "deckselectiontab.h"
+#include "deckeditortab.h"
 
 class CentralWidget : public QWidget
 {
@@ -51,13 +52,14 @@ public slots:
     void changeToDeckEditorTab();
     void changeToStatisticsTab();
     void StartExamWithDeck(const QWeakPointer<Deck> &d);
+    void StartDeckEditorWithDeck(const Deck& deck);
 
 private:
     // Used to hide all tabs, then we unhid the current tab, called by the changeTo*Tab functions
     void HideAllTabs();
 
     // Layout for *this. always has the TabSelector on top and below that the current tab.
-    QVBoxLayout *mainLayout;
+    QHBoxLayout *mainLayout;
 
     // Widget that contains buttons corresponding to tabs sends signals
     // that need to be connected to the correct changeTo*Tab function
@@ -70,7 +72,7 @@ private:
     DeckSelectionTab *deckSelectionTab;
 
     // Deck Editor tab is where the user can create new or edit existing decks.
-    //DeckEditorTab *deckEditorTab;
+    DeckEditorTab *deckEditorTab;
 
     // Statistics tab shows statistics about the users performance.
     // And provides the ability to start an exam based on the decks

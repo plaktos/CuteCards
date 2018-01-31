@@ -26,7 +26,7 @@
  * provides a way for the user to select one more multiple decks
  * and then send a signal with these indexes.
  * Should be contained within a DeckSearcher, which provides a SearchBar,
- * whose textChanged signal should be connected with DeckScrollList changeTextToSearchFor,
+ * whose NeedSearch signals need to be connected to the corresponding slots
  * Apply DeckScrollArea to it after construction to make it scrollable.
 */
 
@@ -60,20 +60,25 @@ public:
     explicit DeckScrollList(QWidget *parent = nullptr);
     ~DeckScrollList()                                               { clearEntries(); }
 
-    QSize sizeHint() const override                                 { return QSize(DECKSCROLLIST_HINT_WIDTH,
-                                                                                   DECKSCROLLIST_HINT_HEIGHT); }
+    QSize sizeHint() const override                                 { return QSize(100,
+                                                                                   100); }
 
     // Adds a new DeckScrollListEntry, and intializes a label,
     // based on the deck passed as argument.
     void addEntry(const Deck *d);
 
-    QMap<int, Qt::CheckState> getSelectedDeckIndexes()                { return selectedEntries; }
+    // Return the indexes of the decks selected by the user
+    QVector<int> getSelectedEntries();
 
     // Deletes all previous Labels and clears deckList
     void clearEntries();
 
 signals:
+    // Send when the user wishes to edit one of the decks in the entry list
     void EditButtonPressedOnEntry(const int &index);
+
+    // Locks the current languages, so the user can only select decks with the
+    // same languages.
     void languageLockModeChanged(bool lock);
 
 public slots:
@@ -81,12 +86,13 @@ public slots:
     //which correspond to those titles visible
     void doATitleSearch(const QString &text);
     void doALanguageSearch(const QString &text);
+    void setSelectedForEntryAt(const int &index, const bool &flag);
 
 private:
     //Hides all labels, called by doASearch(), before doing a search
-    void setHiddenForAllTitleLabels(bool flag);
-    void SelectedStateChangedOnEntry(const int &index,
-                                     const Qt::CheckState &state);
+    void refreshEntries();
+    void setHiddenForAllEntry(bool flag);
+    void setHiddenForEntryAt(int index, bool flag);
     void lockLanguages(const QStringList& list);
     void unlockLanguages();
 
@@ -94,9 +100,18 @@ private:
     QVBoxLayout *mainLayout;
 
     QList<DeckScrollListEntry *> scrollListEntries;
-    QMap<int, Qt::CheckState> selectedEntries;
+
+    QMap<int, bool> selectedEntries;
+    bool selectionActive;
+    // A map to keep track of entries that match the search,
+    // we search within this to see which ones are selected.
+    // in index - bool fashion. Initially all of them are set to 1,
+    // meaning they all match the search
+    QMap<int, bool> searchedEntries;
+    QMap<int, bool> languageMatchedEntries;
 
     bool languageLockMode;
+    bool emptyTitleSearch;
 
 };
 

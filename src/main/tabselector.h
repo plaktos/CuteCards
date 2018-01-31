@@ -30,15 +30,22 @@
 
 #include <QWidget>
 #include<QSize>
-#include<QHBoxLayout>
+#include<QVBoxLayout>
 #include<QPushButton>
 
 #include "windowdefines.h"
 
-//TabSelector variables
-const static unsigned int CENTRAL_TABSELECTOR_HINT_WIDTH = MAINWINDOW_HINT_WIDTH;
-const static unsigned int CENTRAL_TABSELECTOR_HINT_HEIGHT = MAINWINDOW_HINT_HEIGHT/8;
-const static unsigned int CENTRAL_TABSELECTOR_BUTTONS_HINT_WIDTH = MAINWINDOW_HINT_WIDTH/5;
+class TabButton : public QPushButton
+{
+    Q_OBJECT
+public:
+    explicit
+    TabButton(const QString &text,
+              QWidget *parent = nullptr)
+        : QPushButton(text, parent)   { setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed); }
+
+    QSize sizeHint() const override            { return QSize(50,30); }
+};
 
 class TabSelector : public QWidget
 {
@@ -48,8 +55,7 @@ public:
     TabSelector(QWidget *parent = nullptr);
 
     QSize
-    sizeHint() const override                   { return QSize(CENTRAL_TABSELECTOR_HINT_WIDTH,
-                                                               CENTRAL_TABSELECTOR_HINT_HEIGHT); }
+    sizeHint() const override                   { return QSize(50, 120); }
 
 signals:
     void DeckSelectionTabSelected();
@@ -59,11 +65,11 @@ signals:
 public slots:
 
 private:
-    QHBoxLayout *mainLayout;
+    QVBoxLayout *mainLayout;
 
-    QPushButton *deckSelectionTabButton;
-    QPushButton *deckEditorTabButton;
-    QPushButton *statisticsTabButton;
+    TabButton *deckSelectionTabButton;
+    TabButton *deckEditorTabButton;
+    TabButton *statisticsTabButton;
 
 };
 
