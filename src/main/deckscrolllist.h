@@ -80,13 +80,15 @@ signals:
     // Locks the current languages, so the user can only select decks with the
     // same languages.
     void languageLockModeChanged(bool lock);
+    void languagesLockedFromDeckAt(int index);
+    void languageLockModeCleared();
 
 public slots:
     //Searches for textToSearchFor in the deck Titles, and makes the Labels,
     //which correspond to those titles visible
     void doATitleSearch(const QString &text);
     void doALanguageSearch(const QString &text);
-    void setSelectedForEntryAt(const int &index, const bool &flag);
+    void setSelectedForEntryAt(int index, bool flag);
 
 private:
     //Hides all labels, called by doASearch(), before doing a search

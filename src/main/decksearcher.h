@@ -35,7 +35,7 @@
 
 
 #include <QWidget>
-#include<QVBoxLayout>
+#include<QGridLayout>
 #include<QSizePolicy>
 #include<QPushButton>
 #include<QPalette>
@@ -44,6 +44,7 @@
 #include "deckscrolllist.h"
 #include "deck.h"
 #include "windowdefines.h"
+#include "keylanguageselector.h"
 
 const static unsigned int DECKSEARCHER_HINT_WIDTH = MAINWINDOW_HINT_WIDTH/2;
 const static unsigned int DECKSEARCHER_HINT_HEIGHT = MAINWINDOW_HINT_HEIGHT - 50;
@@ -54,35 +55,31 @@ class DeckSearcher : public QWidget
 public:
     explicit DeckSearcher(QWidget *parent = nullptr);
 
-    //QSize sizeHint() const override                             { return QSize(DECKSEARCHER_HINT_WIDTH,
-    //                                                                           DECKSEARCHER_HINT_HEIGHT); }
-
-    void setBottomButtonText(const QString &text)               { bottomButton->setText(text); }
-
     // Returns the selectionIndexes that are set by recieving a signal
     // to changeSelection
     QVector<int> selection()                                    { return deckScrollList->getSelectedEntries(); }
-    void setHideBottomButton(bool b)                            { bottomButton->setHidden(b); }
 
 signals:
-    void bottomButtonPressed();
+    void StartButtonPressedWithKeyIndex(int index);
 
     void EditButtonPressedOnEntry(const int &index);
 
 public slots:
     void setDeck(const QList<Deck> &newdeck)                  { decks = &newdeck;
                                                                 refillScrollList(); }
+    void initKeyLanguageSelectorWithDeckAt(int index);
 
 private:
     void refillScrollList();
 
     // Layout for this. Vertical layout, on the top is the DeckSearchBar,
     // Below that is the DeckScroll list, and on the bottom is a button
-    QVBoxLayout *mainLayout;
+    QGridLayout *mainLayout;
 
     DeckSearchBar *deckSearchBar;
     DeckScrollList *deckScrollList;
-    QPushButton *bottomButton;
+    QPushButton *startButton;
+    KeyLanguageSelector *keyLanguageSelector;
 
     const QList<Deck> *decks;
 };

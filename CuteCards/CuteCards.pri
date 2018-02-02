@@ -21,6 +21,7 @@ SOURCES += \
         ../src/main/wordscrolllistentry.cpp \
         ../src/main/wordsearcherbar.cpp \
         ../src/main/wordeditorscrolllist.cpp \
+        ../src/main/keylanguageselector.cpp \
 
 
 
@@ -47,3 +48,4 @@ HEADERS += \
         ../src/main/wordscrolllistentry.h \
         ../src/main/wordsearcherbar.h \
         ../src/main/wordeditorscrolllist.h \
+        ../src/main/keylanguageselector.h \

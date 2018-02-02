@@ -22,9 +22,7 @@
 
 ExamTab::ExamTab(QWidget *parent)
     : QWidget(parent),
-      deck(),
-      mainBox(0),
-      currCardIndex(0), currKey(), currRestWords()
+      currCardIndex(0)
 {
     // Setup members
     mainBox = new ExamMainBox;
@@ -77,5 +75,6 @@ ExamTab::NextCard(){
 void
 ExamTab::StartExamWithDeck(const QWeakPointer<Deck> &d){
     deck = d;
+    currCardIndex = 0;
     grabKeyboard();
 }

@@ -66,6 +66,9 @@ CentralWidget::CentralWidget(QWidget *parent)
     connect(deckSelectionTab, &DeckSelectionTab::ToEditDeck,
             this, &CentralWidget::StartDeckEditorWithDeck);
 
+    connect(deckEditorTab, &DeckEditorTab::finishedDeckEditing,
+            this, &CentralWidget::changeToDeckSelectionTab);
+
     //Start off with Deck Selection.
     //Change later to a welcome tab
     changeToDeckSelectionTab();
@@ -77,6 +80,7 @@ CentralWidget::HideAllTabs(){
     deckSelectionTab->setHidden(true);
     deckEditorTab->setHidden(true);
     //statisticsTab->setHidden(true);
+    tabSelector->setHidden(false);
 }
 
 void
@@ -109,6 +113,7 @@ CentralWidget::changeToDeckEditorTab(){
     deckEditorTab->loadDeck(Deck());
     HideAllTabs();
     deckEditorTab->setHidden(false);
+    tabSelector->setHidden(true);
 }
 
 void

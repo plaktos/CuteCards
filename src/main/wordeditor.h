@@ -7,6 +7,7 @@
 #include<QHBoxLayout>
 #include<QSize>
 #include<QScrollArea>
+#include<QDialog>
 
 #include"deck.h"
 #include"wordeditorscrolllist.h"
@@ -35,17 +36,40 @@ signals:
     void NewCardButtonPressed();
     void SaveButtonPressed();
     void AddButtonPressed();
+    void AddLanguageButtonPressed();
 
 public slots:
     void changeToSaveButton()                   { alternatingButton->setText("Save");
                                                   saveMode = true; }
+    void setLanguageEditMode(bool flag);
 
 private:
     QHBoxLayout *mainLayout;
-    QPushButton *newCardButton;
-    QPushButton *alternatingButton;
+    WordEditorButtonBarButton *newCardButton;
+    WordEditorButtonBarButton *alternatingButton;
+    WordEditorButtonBarButton *addLanguageButton;
+    WordEditorButtonBarButton *finishedLanguageAddingButton;
 
     bool saveMode;
+    bool languageEditMode;
+};
+
+class AddLanguageDialog : public QDialog
+{
+    Q_OBJECT
+public:
+    explicit
+    AddLanguageDialog(QWidget *parent);
+
+    QSize sizeHint() const override;
+    const QString& getLanguage()            { return enteredLanguage; }
+
+private:
+    QGridLayout *mainLayout;
+    QPushButton *okButton;
+    QPushButton *cancelButton;
+    QLineEdit *langLineEdit;
+    QString enteredLanguage;
 };
 
 class WordEditor : public QWidget
@@ -57,14 +81,17 @@ public:
     QSize sizeHint() const override;
     void setFlashcard(int index, const Flashcard& card);
     void InitWithDeck(const Deck& deck);
+    QStringList getLanguages()              { return scrollList->getLanguages(); }
 signals:
     void addCardPressedWithCard(const Flashcard& card);
     void saveCardPressedWithCard(int index,
                                  const Flashcard& card);
 
     void cardLoaded();
+    void changedLanguageEditMode(bool flag);
 
 public slots:
+    void PromptToAddLanguageToScrollList();
 
 private:
     QVBoxLayout *mainLayout;

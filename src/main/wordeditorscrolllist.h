@@ -22,6 +22,7 @@ public:
     void loadFromCard(const Flashcard& card);
 
     Flashcard toCard();
+    QStringList getLanguages();
     QSize sizeHint() const override;
 
 signals:

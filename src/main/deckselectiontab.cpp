@@ -25,11 +25,12 @@ DeckSelectionTab::DeckSelectionTab(QWidget* parent)
 {
     // Setup member widgets
     availableDecksSearcher = new DeckSearcher;
-    availableDecksSearcher->setBottomButtonText("Start");
 
     // Setup layout
-    mainLayout = new QGridLayout;
-    mainLayout->addWidget(availableDecksSearcher, 0,0,1,1);
+    mainLayout = new QVBoxLayout;
+    mainLayout->setContentsMargins(0,0,0,0);
+    mainLayout->setSpacing(0);
+    mainLayout->addWidget(availableDecksSearcher);
 
     // Setup this
     setLayout(mainLayout);
@@ -43,7 +44,7 @@ DeckSelectionTab::DeckSelectionTab(QWidget* parent)
             this, &DeckSelectionTab::SignalToEditAvailableDeckAt);
 
     // Temporary
-    connect(availableDecksSearcher, &DeckSearcher::bottomButtonPressed,
+    connect(availableDecksSearcher, &DeckSearcher::StartButtonPressedWithKeyIndex,
             this, &DeckSelectionTab::StartExam);
 
 }
@@ -67,13 +68,16 @@ DeckSelectionTab::LoadAvailableDecks(){
 }
 
 void
-DeckSelectionTab::StartExam(){
+DeckSelectionTab::StartExam(int index){
     currExamDeck = QSharedPointer<Deck>(new Deck);
     QVector<int> indexes = availableDecksSearcher->selection();
     for(int i = 0; i < indexes.size(); i++){
         currExamDeck.data()->mergeDeck(availableDecks[indexes[i]]);
     }
     if(!currExamDeck.data()->empty()){
+        currExamDeck->setLanguages(availableDecks[indexes[0]].getLanguages());
+        currExamDeck->setKey(index);
+        currExamDeck->setTitle("Exam Deck");
         emit ExamToStartWithDeck(currExamDeck.toWeakRef());
     }
 }

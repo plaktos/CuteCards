@@ -52,7 +52,7 @@ WordEditorScrollList::loadFromCard(const Flashcard &card){
 Flashcard
 WordEditorScrollList::toCard(){
     QStringList enteredWords;
-    for(QLineEdit* lineedit : valueLines){
+    for(auto lineedit : valueLines){
         enteredWords.append(lineedit->text());
     }
     for(auto word : enteredWords){
@@ -60,5 +60,14 @@ WordEditorScrollList::toCard(){
            return Flashcard();
     }
     return Flashcard(enteredWords);
+}
+
+QStringList
+WordEditorScrollList::getLanguages(){
+    QStringList languages;
+    for(auto label : labelLines){
+        languages.append(label->text());
+    }
+    return languages;
 }
 

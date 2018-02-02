@@ -27,8 +27,9 @@ DeckSearcher::DeckSearcher(QWidget *parent)
     // Initialize members
     deckSearchBar = new DeckSearchBar;
     deckScrollList = new DeckScrollList;
-    bottomButton = new QPushButton;
-    bottomButton->setMaximumWidth(200);
+    startButton = new QPushButton("Start");
+    startButton->setMaximumSize(200,50);
+    keyLanguageSelector = new KeyLanguageSelector;
 
     // Add QScrollArea to deckScrollList
     DeckScrollArea *scrollArea = new DeckScrollArea;
@@ -39,11 +40,13 @@ DeckSearcher::DeckSearcher(QWidget *parent)
     scrollArea->setPalette(scrollAreaPalette);
 
     // Setup layout
-    mainLayout = new QVBoxLayout;
-    mainLayout->setAlignment(Qt::AlignCenter);
-    mainLayout->addWidget(deckSearchBar);
-    mainLayout->addWidget(scrollArea);
-    mainLayout->addWidget(bottomButton);
+    mainLayout = new QGridLayout;
+    mainLayout->setContentsMargins(5,0,5,0);
+    mainLayout->setSpacing(0);
+    mainLayout->addWidget(deckSearchBar, 0,1,1,2);
+    mainLayout->addWidget(scrollArea, 1,0,2,3);
+    mainLayout->addWidget(startButton,3,2,1,1);
+    mainLayout->addWidget(keyLanguageSelector, 3,0,1,2);
 
     // Setup this
     setLayout(mainLayout);
@@ -56,14 +59,24 @@ DeckSearcher::DeckSearcher(QWidget *parent)
     connect(deckSearchBar, &DeckSearchBar::NeedLanguageSearchFor,
             deckScrollList, &DeckScrollList::doALanguageSearch);
 
-    connect(bottomButton, &QPushButton::pressed,
-            this, &DeckSearcher::bottomButtonPressed);
+    connect(startButton, &QPushButton::pressed,
+            [this](){
+        emit StartButtonPressedWithKeyIndex(keyLanguageSelector->getKeyLanguageIndex());
+    });
 
     connect(deckScrollList, &DeckScrollList::EditButtonPressedOnEntry,
             this, &DeckSearcher::EditButtonPressedOnEntry);
 
     connect(deckScrollList, &DeckScrollList::languageLockModeChanged,
             deckSearchBar, &DeckSearchBar::setLanguageLock);
+
+    connect(deckScrollList, &DeckScrollList::languagesLockedFromDeckAt,
+            this, &DeckSearcher::initKeyLanguageSelectorWithDeckAt);
+
+    connect(deckScrollList, &DeckScrollList::languageLockModeCleared,
+            [this](){
+       keyLanguageSelector->clear();
+    });
 }
 
 void
@@ -71,5 +84,15 @@ DeckSearcher::refillScrollList(){
     deckScrollList->clearEntries();
     for(auto const &deck : *decks){
         deckScrollList->addEntry(&deck);
+    }
+}
+
+void
+DeckSearcher::initKeyLanguageSelectorWithDeckAt(int index){
+    QStringList languages = decks->at(index).getLanguages();
+
+    keyLanguageSelector->clear();
+    for(auto lang : languages){
+        keyLanguageSelector->addLanguage(lang);
     }
 }

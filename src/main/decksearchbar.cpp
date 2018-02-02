@@ -63,6 +63,7 @@ DeckSearchBar::DeckSearchBar(QWidget *parent)
     mainLayout->setContentsMargins(0,0,0,0);
 
     setLayout(mainLayout);
+    setMaximumHeight(50);
 
     connect(titleSearcher, &DeckSearchBarPart::needSearchFor,
             this, &DeckSearchBar::NeedTitleSearchFor);

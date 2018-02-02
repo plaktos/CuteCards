@@ -107,7 +107,7 @@ DeckScrollList::doALanguageSearch(const QString& text){
 }
 
 void
-DeckScrollList::setSelectedForEntryAt(const int &index, const bool &flag){
+DeckScrollList::setSelectedForEntryAt(int index, bool flag){
     selectedEntries[index] = flag;
 
     QMap<int, bool>::const_iterator begin = selectedEntries.constBegin();
@@ -117,13 +117,17 @@ DeckScrollList::setSelectedForEntryAt(const int &index, const bool &flag){
     while(begin != end){
         if(begin.value() == true){
             selectionActive = true;
-            lockLanguages(scrollListEntries[index]->getLanguages());
+            if(!languageLockMode){
+                lockLanguages(scrollListEntries[index]->getLanguages());
+                emit languagesLockedFromDeckAt(index);
+            }
             break;
         }
         ++begin;
     }
     if(!selectionActive){
         unlockLanguages();
+        emit languageLockModeCleared();
     }
     refreshEntries();
 }

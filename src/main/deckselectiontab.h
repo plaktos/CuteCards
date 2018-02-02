@@ -69,12 +69,12 @@ public slots:
     // Connected to the signal of examDecksSearcher's bottom button.
     // Creates a new deck from the selectionIndexes
     // and emits the ExamToStartWithDeck signal
-    void StartExam();
+    void StartExam(int index);
 
 protected:
 
 private:
-    QGridLayout *mainLayout;
+    QVBoxLayout *mainLayout;
 
     DeckSearcher *availableDecksSearcher;
     DeckSearcher *examDecksSearcher;

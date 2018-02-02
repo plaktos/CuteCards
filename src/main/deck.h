@@ -34,9 +34,10 @@
  * The method withoutKey() returns a QStringList without the key word.
 */
 
+#include<QJsonObject>
+#include<QJsonArray>
 
 #include "flashcard.h"
-
 
 struct Deck{
 
@@ -94,7 +95,12 @@ struct Deck{
     QString getTitle() const                        { return title; }
 
     inline
+    void setTitle(const QString& text)              { title = text; }
+
+    inline
     QStringList getLanguages() const                { return languages; }
+
+    void setLanguages(const QStringList& langs)     { languages = langs; }
 
     inline
     size_t size() const                             { return cards.size(); }
@@ -103,18 +109,43 @@ struct Deck{
     QString key(unsigned int n) const               { return cards.at(n).at(keyIndex); }
 
     inline
+    int getKeyIndex() const                         { return keyIndex; }
+
+    inline
     QString keyLanguage() const                     {return languages[keyIndex];}
 
     inline
     void setKey(unsigned int i)                     { if(!(i > languages.size()-1)){
-                                                        keyIndex = i;}
-                                                      }
+                                                        keyIndex = i;} }
 
-    QStringList withoutKey(unsigned int n)       { QStringList retlist;
+    QStringList withoutKey(unsigned int n)          { QStringList retlist;
                                                       for(int i = 0; i < cards[n].size(); ++i){
                                                           if(!(i == keyIndex))
                                                               retlist.append(cards[n].at(i)); }
                                                       return retlist; }
+
+    QJsonObject ToJsonObject() const
+    {
+        QJsonObject root;
+        QJsonObject properties;
+        QJsonArray wordArray;
+        QJsonArray languageArray;
+        for(auto lang : languages){
+            languageArray.append(lang);
+        }
+        for(auto card : cards){
+            QJsonArray currCardArray;
+            for(auto word : card){
+                currCardArray.append(word);
+            }
+            wordArray.append(currCardArray);
+        }
+        properties["Languages"] = languageArray;
+        properties["Title"] = title;
+        root["Properties"] = properties;
+        root["Words"] = wordArray;
+        return root;
+    }
 
 private:
     QString title;

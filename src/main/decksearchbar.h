@@ -34,9 +34,6 @@
 #include<QFocusEvent>
 #include<QTimer>
 
-const static unsigned int DECKSEARCHBAR_HINT_WIDTH = 300;
-const static unsigned int DECKSEARCHBAR_HINT_HEIGHT = 50;
-
 class DeckSearchBarPart : public QLineEdit
 {
     Q_OBJECT
@@ -60,7 +57,6 @@ class DeckSearchBar : public QWidget
 public:
     DeckSearchBar(QWidget* parent = nullptr);
 
-    QSize sizeHint() const override             { return QSize(); }
 signals:
     void NeedTitleSearchFor(const QString& text);
     void NeedLanguageSearchFor(const QString& text);

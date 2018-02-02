@@ -1,8 +1,7 @@
 #include "wordscrolllist.h"
 
 WordScrollList::WordScrollList(QWidget *parent)
-    : QWidget(parent),
-      locked(false)
+    : QWidget(parent)
 {
     mainLayout = new QVBoxLayout;
     mainLayout->setSizeConstraint(QLayout::SetFixedSize);
@@ -53,10 +52,4 @@ WordScrollList::addEntry(const Flashcard &card){
             this, &WordScrollList::EntrySelectedAt);
     connect(entry, &WordScrollListEntry::DeleteButtonPressed,
             this, &WordScrollList::DeleteButtonPressedForEntryAt);
-}
-
-void
-WordScrollList::mousePressEvent(QMouseEvent *e){
-    if(!locked)
-        QWidget::mousePressEvent(e);
 }

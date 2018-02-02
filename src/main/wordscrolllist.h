@@ -24,15 +24,10 @@ signals:
 public slots:
     void searchFor(const QString& text);
 
-protected:
-    void mousePressEvent(QMouseEvent *e);
-
 private:
 
     QVBoxLayout *mainLayout;
     QList<WordScrollListEntry *> entries;
-
-    bool locked;
 };
 
 #endif // WORDSCROLLLIST_H

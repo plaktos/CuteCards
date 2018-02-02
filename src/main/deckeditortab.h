@@ -3,6 +3,10 @@
 
 #include <QWidget>
 #include<QList>
+#include<QFileDialog>
+#include<QJsonDocument>
+#include<QGridLayout>
+#include<QLineEdit>
 
 #include "deck.h"
 #include "wordsearcher.h"
@@ -17,7 +21,7 @@ public:
 
     void loadDeck(const Deck& deck);
 signals:
-    void cancelDeckEditing();
+    void finishedDeckEditing();
     void workingDeckChanged(const Deck& newdeck);
 
 public slots:
@@ -31,8 +35,9 @@ public slots:
 private:
     void InitWordEditorLanguageList();
 
-    QHBoxLayout *mainLayout;
+    QGridLayout *mainLayout;
 
+    QLineEdit *deckTitleEditor;
     WordSearcher *wordSearcher;
     WordEditor *wordEditor;
     DeckEditorSaveBar *deckEditorSaveBar;

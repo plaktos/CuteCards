@@ -19,6 +19,7 @@ WordSearcher::WordSearcher(QWidget *parent)
     mainLayout->addWidget(wordScrollArea);
 
     setLayout(mainLayout);
+    setMinimumSize(300,350);
 
     connect(wordScrollList, &WordScrollList::EntrySelectedAt,
             this, &WordSearcher::ToEditFlashcardAt);

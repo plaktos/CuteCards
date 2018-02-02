@@ -43,6 +43,9 @@ struct Flashcard{
         : num_words(wlist.size()),
           words(wlist) {}
 
+    QStringList::const_iterator begin()                 { return words.begin(); }
+    QStringList::const_iterator end()                 { return words.end(); }
+
     inline
     bool operator==(const Flashcard& other) const       { return (num_words == other.num_words) &&
                                                                  (words == other.words) ?
@@ -66,6 +69,9 @@ struct Flashcard{
 
     inline
     QString at(const int i) const                       { return this->operator[](i); }
+
+    inline
+    QStringList getWords()                               { return words; }
 
 
 private:
