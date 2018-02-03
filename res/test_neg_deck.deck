@@ -2,7 +2,7 @@
     "Properties": {
         "Title" : "Test deck (negative)"
     },
-    "Words": {
+    "Words": [
         "1" : 
             ["english","apple"],
             ["chinese","苹果"],

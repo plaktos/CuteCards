@@ -34,17 +34,13 @@
 #include <QWidget>
 #include<QPushButton>
 #include<QFileDialog>
+#include<QGridLayout>
+#include<QTimer>
 
-#include "tab.h"
 #include "exammainbox.h"
 #include "deckloader.h"
-#include "windowdefines.h"
 
-//Exam tab variables
-const static unsigned int EXAMTAB_HINT_WIDTH = MAINWINDOW_HINT_WIDTH;
-const static unsigned int EXAMTAB_HINT_HEIGHT = MAINWINDOW_HINT_HEIGHT;
-
-class ExamTab : public Tab
+class ExamTab : public QWidget
 {
     Q_OBJECT
 public:
@@ -52,7 +48,7 @@ public:
     explicit
     ExamTab(QWidget *parent = nullptr);
 
-    QSize sizeHint() const override                 { return QSize(EXAMTAB_HINT_WIDTH,EXAMTAB_HINT_HEIGHT); }
+    QSize sizeHint() const override                 { return QSize(800,600); }
 
 signals:
     // Sends out a signal with the current key and restwords data of the
@@ -79,7 +75,12 @@ private:
     // Changes the card data to the next card's and emits changeToCard
     void NextCard();
 
+    QGridLayout *mainLayout;
+
     ExamMainBox *mainBox;
+    QTimer *cardTimer;
+    QPushButton *nextCardButton;
+    QPushButton *revealCardButton;
 
     QWeakPointer<Deck> deck;
 

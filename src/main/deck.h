@@ -34,34 +34,30 @@
  * The method withoutKey() returns a QStringList without the key word.
 */
 
+#include<QJsonObject>
+#include<QJsonArray>
 
 #include "flashcard.h"
 
-
 struct Deck{
 
-    Deck()
-        : title("Empty Deck"),
-          languages{"empty"},
-          cards(),
-          keyIndex(0) {}
-
+    Deck();
     Deck(const QString& str_title,
          const QStringList list_langs,
-         const QList<Flashcard>& card_list)
-            : title(str_title),
-            languages(list_langs),
-            cards(card_list),
-            keyIndex(1) {}
+         const QList<Flashcard>& card_list);
 
     inline
-    Flashcard operator[](int i) const               { return cards.at(i); }
+    Flashcard& operator[](int i)                    { return cards[i]; }
 
     inline
-    Flashcard at(int i)                             { return this->operator [](i); }
+    const Flashcard& at(int i) const                { return cards.at(i); }
 
     inline
     QList<Flashcard> getCards() const               { return cards; }
+
+
+    bool operator<(const Deck &rhs) const           { return getTitle() < rhs.getTitle() ?
+                                                      true :false; }
 
     inline
     bool operator==(const Deck& other) const        { return (title == other.title) &&
@@ -80,14 +76,28 @@ struct Deck{
     inline
     void addCard(const Flashcard& card)             { cards.append(card); }
 
-    void
-    mergeDeck(const Deck& other)                    { cards += other.getCards(); }
+    inline
+    void mergeDeck(const Deck& other)               { cards += other.getCards(); }
+
+    inline
+    void removeAt(int i)                            { cards.removeAt(i); }
 
     inline
     QString getTitle() const                        { return title; }
 
     inline
-    QStringList getLanguages() const             { return languages; }
+    void setTitle(const QString& text)              { title = text; }
+
+    inline
+    QStringList getLanguages() const                { return languages; }
+
+    void setLanguages(const QStringList& langs)     { languages = langs;
+                                                      numOfLanguages = languages.size(); }
+    inline
+    void setNumOfLanguages(int n)                   { numOfLanguages = n; }
+
+    inline
+    int getNumOfLanguages() const                   { return numOfLanguages; }
 
     inline
     size_t size() const                             { return cards.size(); }
@@ -96,22 +106,23 @@ struct Deck{
     QString key(unsigned int n) const               { return cards.at(n).at(keyIndex); }
 
     inline
-    QString keyLanguage() const                     {return languages[keyIndex];}
+    int getKeyIndex() const                         { return keyIndex; }
+
+    inline
+    QString keyLanguage() const                     { return languages[keyIndex]; }
 
     inline
     void setKey(unsigned int i)                     { if(!(i > languages.size()-1)){
-                                                        keyIndex = i;}
-                                                      }
+                                                        keyIndex = i;} }
 
-    QStringList withoutKey(unsigned int n)       { QStringList retlist;
-                                                      for(int i = 0; i < cards[n].size(); ++i){
-                                                          if(!(i == keyIndex))
-                                                              retlist.append(cards[n].at(i)); }
-                                                      return retlist; }
+    QStringList withoutKey(unsigned int n) const;
+
+    QJsonObject ToJsonObject() const;
 
 private:
     QString title;
     QStringList languages;
+    int numOfLanguages;
     QList<Flashcard> cards;
     unsigned int keyIndex;
 };

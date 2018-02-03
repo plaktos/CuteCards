@@ -25,3 +25,4 @@ DEFINES += QT_DEPRECATED_WARNINGS
 include(CuteCards.pri)
 
 OBJECTS_DIR = ../obj/main
+MOC_DIR = ../moc/main

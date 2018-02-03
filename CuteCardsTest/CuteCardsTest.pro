@@ -26,4 +26,4 @@ DEFINES += QT_DEPRECATED_WARNINGS
 include(CuteCardsTest.pri)
 
 OBJECTS_DIR = ../obj/test
-QMAKE_LIBDIR += ../obj/main
+QMAKE_LIBDIR += ../obj/test
