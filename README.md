@@ -1,38 +1,34 @@
 # What is this?
 
-This project is meant to develop a Flashcard program using Qt5.10.
-
+This project is meant to develop a Flashcard manager using Qt5.10.
 It takes .deck files which are JSON documents formatted in a specific way.
+These can be created by hand in the Deck Editor or imported from CSV with minor modifications
 
-# How do I format the .deck file
+# Current state
 
-There will be an inbuilt .deck editor, that supports to/from CSV conversion.
+**Release-v0.1.0:**
+  * Load decks from ./decks
+  * Create decks in Deck Editor by hand
+  * Create decks from CSV files
+  * Select decks in the Deck Selector
+  * Start an exam with the decks selected in Deck Selector
+  * Select the key language (this determines which word is shown first)
+  
+**To do:**
+  * Export to CSV
+  * Decks with same languages but different order be compatible
+  * Statistics tab
+  * Making the UI more pretty
+  * Finish the layout
+  
+Release versions come with pre-packaged decks, this is a list of decks in the latest version
 
-Here is an example, taken from *test_pos.deck*, see below, for explanation
-```
-{
-    "Properties": {
-        "Title" : "Test deck (positive)",
-		"Languages" : ["english","chinese","pinyin"]
-    },
-    "Words": [
-		["apple","苹果","ping2 guo3"],
-		["table","桌子","zhuo1 zi0"],
-		["fire","火","huo3"]
-    ]
-}
-```
+**Available decks:**
+  * HSK 1-6
 
-Every .deck file should contain exactly 2 objects (aside from the root).
-These are with the respective keys `Properties` and `Words`.
-The JSON Object `Properties` contains information about the deck itself.
-The JSON Object `Words` contains the actual JSON Array.
-Inside this JSON Array are more arrays, each one corresponding to a word.
-The number of words in this array must equal to the number of languages.
-These get turned into Flashcard objects, which are read into a Deck.
+# How can I use this
 
-Flashcards are designed this way, to provide support for languages that require more than 2 words.
-Such as chinese.
+You can either build from source or download one of the releases in the release tab.
 
 # How do I build this?
 
@@ -45,15 +41,17 @@ You need the original Qt libraries to build this project.
 
 ## To build
 
-Open the CuteCards.pro file in **Qt Editor**.
+Open the CuteCards.pro file in Qt Editor.
 Configure and then build it.
 
 ## Qmake
 
-Or you can choose to build the project with **qmake**
+Or you can choose to build the project with qmake
 You may have to change the variables `QMAKESPEC` and `PATH`. See [qmake Variables](http://doc.qt.io/qt-5/qmake-variable-reference.html) for details.
 
 `qmake -makefile <PATH_TO_PRO_FILE>/CuteCards.pro`
+
+`make`
 
 # License
 
