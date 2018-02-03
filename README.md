@@ -53,6 +53,11 @@ You may have to change the variables `QMAKESPEC` and `PATH`. See [qmake Variable
 
 `make`
 
+# Deck sources
+
+List of sources for the pre-packaged .deck files:
+  * HSK 1-6 converted, with minor modifications from csv files: [gigacool/hanyu-shuiping-kaoshi](https://github.com/gigacool/hanyu-shuiping-kaoshi)
+
 # License
 
 This project made public under the terms of GNU GPL, see LICENSE for details.
