@@ -28,7 +28,7 @@ Release versions come with pre-packaged decks, this is a list of decks in the la
 
 # How can I use this
 
-You can either build from source or download one of the releases in the release tab.
+You can either build from source or download one of the [releases](https://github.com/plaktos/CuteCards/releases).
 
 # How do I build this?
 
