@@ -71,7 +71,7 @@ public:
                         const QStringList &langs,
                         QWidget *parent = nullptr);
 
-    QSize sizeHint() const override                         { return QSize(400,35); }
+    QSize sizeHint() const override                         { return QSize(500,35); }
 
     // Used to determine whether the this widget,
     // that refers to a deck is selected

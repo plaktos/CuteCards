@@ -27,12 +27,22 @@ ExamTab::ExamTab(QWidget *parent)
     // Setup members
     mainBox = new ExamMainBox;
 
+    nextCardButton = new QPushButton("\u21A6");
+    revealCardButton = new QPushButton("\u21BB");
+    nextCardButton->setMinimumHeight(50);
+    revealCardButton->setMinimumHeight(50);
+
+    QFont buttonFont(nextCardButton->font());
+    buttonFont.setPointSize(buttonFont.pointSize() + 12);
+    nextCardButton->setFont(buttonFont);
+    revealCardButton->setFont(buttonFont);
+
     // Setup layout
-    QVBoxLayout *mainLayout = new QVBoxLayout;
+    mainLayout = new QGridLayout;
     mainLayout->setAlignment(Qt::AlignCenter);
-    mainLayout->addStretch(1);
-    mainLayout->addWidget(mainBox);
-    mainLayout->addStretch(1);
+    mainLayout->addWidget(mainBox, 0,0,2,3);
+    mainLayout->addWidget(revealCardButton, 2,1,1,1);
+    mainLayout->addWidget(nextCardButton, 2,2,1,1);
 
     // Setup this
     setLayout(mainLayout);
@@ -43,6 +53,11 @@ ExamTab::ExamTab(QWidget *parent)
 
     connect(this, SIGNAL(toRevealCard()),
             mainBox, SLOT(RevealCard()));
+
+    connect(nextCardButton, &QPushButton::pressed,
+            this, &ExamTab::NextCard);
+    connect(revealCardButton, &QPushButton::pressed,
+            this, &ExamTab::toRevealCard);
 }
 
 void
@@ -76,5 +91,6 @@ void
 ExamTab::StartExamWithDeck(const QWeakPointer<Deck> &d){
     deck = d;
     currCardIndex = 0;
+    NextCard();
     grabKeyboard();
 }

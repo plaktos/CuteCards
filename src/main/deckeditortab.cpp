@@ -1,21 +1,42 @@
 #include "deckeditortab.h"
 
+DeckOptionsPanel::DeckOptionsPanel(QWidget *parent)
+    : QFrame(parent)
+{
+    titleLineEdit = new QLineEdit;
+    titleLineEdit->setPlaceholderText("Title...");
+
+    importCSVButton = new QPushButton("Import CSV");
+    exportCSVButton = new QPushButton("Export CSV");
+
+    mainLayout = new QGridLayout;
+    mainLayout->addWidget(titleLineEdit, 0,0, 1,2);
+    mainLayout->addWidget(exportCSVButton, 1,0, 1,1);
+    mainLayout->addWidget(importCSVButton, 1,1, 1,1);
+
+    setLayout(mainLayout);
+
+    connect(importCSVButton, &QPushButton::pressed,
+            this, &DeckOptionsPanel::ImportCSVButtonPressed);
+    connect(exportCSVButton, &QPushButton::pressed,
+            this, &DeckOptionsPanel::ExportCSVButtonPressed);
+}
+
 DeckEditorTab::DeckEditorTab(QWidget *parent)
     : QWidget(parent)
 {
     wordSearcher = new WordSearcher(this);
     wordEditor = new WordEditor;
+    deckOptionsPanel = new DeckOptionsPanel;
     deckEditorSaveBar = new DeckEditorSaveBar;
-    deckTitleEditor = new QLineEdit;
-    deckTitleEditor->setMaximumWidth(250);
 
     mainLayout = new QGridLayout;
-    mainLayout->setContentsMargins(0,0,0,0);
+    mainLayout->setContentsMargins(5,10,0,0);
     mainLayout->setSpacing(0);
-    mainLayout->addWidget(wordEditor, 0,0,1,1);
-    mainLayout->addWidget(deckTitleEditor, 1,0,1,1);
-    mainLayout->addWidget(wordSearcher, 0,1,3,1);
-    mainLayout->addWidget(deckEditorSaveBar, 0,3,3,1);
+    mainLayout->addWidget(wordEditor, 2,0,1,1);
+    mainLayout->addWidget(deckOptionsPanel, 1,0,1,1);
+    mainLayout->addWidget(wordSearcher, 0,1,4,1);
+    mainLayout->addWidget(deckEditorSaveBar, 0,3,4,1);
 
     setLayout(mainLayout);
 
@@ -38,14 +59,35 @@ DeckEditorTab::DeckEditorTab(QWidget *parent)
 
     connect(this, &DeckEditorTab::workingDeckChanged,
             wordSearcher, &WordSearcher::refreshListWithDeck);
+
+    connect(deckOptionsPanel, &DeckOptionsPanel::ImportCSVButtonPressed,
+            this, &DeckEditorTab::importDeckFromCSV);
+    connect(deckOptionsPanel, &DeckOptionsPanel::ExportCSVButtonPressed,
+            this, &DeckEditorTab::exportDeckToCSV);
 }
 
 void
 DeckEditorTab::loadDeck(const Deck &deck){
     workingDeck = deck;
-    deckTitleEditor->setPlaceholderText(deck.getTitle());
     wordEditor->InitWithDeck(workingDeck);
     emit workingDeckChanged(workingDeck);
+}
+
+void
+DeckEditorTab::importDeckFromCSV(){
+    QString filename = QFileDialog::getOpenFileName(this, "Open .CSV",
+                                                    "./", "CSV(*.csv)");
+    workingDeck = DeckLoader::fromCSVFile(filename);
+    for(int i = 0; i < workingDeck.getNumOfLanguages(); ++i){
+        wordEditor->PromptToAddLanguageToScrollList();
+    }
+    wordEditor->setLanguageEditMode(false);
+    emit workingDeckChanged(workingDeck);
+}
+
+void
+DeckEditorTab::exportDeckToCSV(){
+
 }
 
 void
@@ -79,8 +121,8 @@ DeckEditorTab::deleteFlashcardFromWorkingDeckAt(const int &index)
 
 void
 DeckEditorTab::saveDeck(){
-    if(!(deckTitleEditor->text() == "")){
-        workingDeck.setTitle(deckTitleEditor->text());
+    if(!(deckOptionsPanel->getTitle() == "")){
+        workingDeck.setTitle(deckOptionsPanel->getTitle());
         workingDeck.setLanguages(wordEditor->getLanguages());
         QString filename = QFileDialog::getSaveFileName(this, "Save as .deck",
                                                         "./res", "Decks (*.deck)");

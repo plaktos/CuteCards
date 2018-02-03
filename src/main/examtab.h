@@ -34,6 +34,8 @@
 #include <QWidget>
 #include<QPushButton>
 #include<QFileDialog>
+#include<QGridLayout>
+#include<QTimer>
 
 #include "exammainbox.h"
 #include "deckloader.h"
@@ -78,7 +80,12 @@ private:
     // Changes the card data to the next card's and emits changeToCard
     void NextCard();
 
+    QGridLayout *mainLayout;
+
     ExamMainBox *mainBox;
+    QTimer *cardTimer;
+    QPushButton *nextCardButton;
+    QPushButton *revealCardButton;
 
     QWeakPointer<Deck> deck;
 

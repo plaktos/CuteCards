@@ -49,6 +49,9 @@ public:
     static
     Deck fromDeckFile(const QString& filename);
 
+    static
+    Deck fromCSVFile(const QString& filename);
+
 private:
     //Makes sure .deck file is formatted properly
     //Called by parseDeck before parsing.

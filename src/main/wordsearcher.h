@@ -2,7 +2,7 @@
 #define WORDSEARCHER_H
 
 #include <QWidget>
-#include<QVBoxLayout>
+#include<QGridLayout>
 #include<QScrollArea>
 
 #include"deck.h"
@@ -25,7 +25,7 @@ public slots:
     void refreshListWithDeck(const Deck& deck);
 
 private:
-    QVBoxLayout *mainLayout;
+    QGridLayout *mainLayout;
     WordSearcherBar *searchBar;
     WordScrollList *wordScrollList;
 

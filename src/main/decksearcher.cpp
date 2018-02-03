@@ -81,6 +81,7 @@ DeckSearcher::DeckSearcher(QWidget *parent)
 
 void
 DeckSearcher::refillScrollList(){
+    keyLanguageSelector->clear();
     deckScrollList->clearEntries();
     for(auto const &deck : *decks){
         deckScrollList->addEntry(&deck);

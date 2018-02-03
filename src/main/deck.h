@@ -43,7 +43,7 @@ struct Deck{
 
     Deck()
         : title("Empty Deck"),
-          languages{"empty"},
+          languages{"empty"}, numOfLanguages(0),
           cards(),
           keyIndex(0) {}
 
@@ -51,7 +51,7 @@ struct Deck{
          const QStringList list_langs,
          const QList<Flashcard>& card_list)
             : title(str_title),
-            languages(list_langs),
+            languages(list_langs), numOfLanguages(list_langs.size()),
             cards(card_list),
             keyIndex(1) {}
 
@@ -100,7 +100,11 @@ struct Deck{
     inline
     QStringList getLanguages() const                { return languages; }
 
-    void setLanguages(const QStringList& langs)     { languages = langs; }
+    void setLanguages(const QStringList& langs)     { languages = langs;
+                                                      numOfLanguages = languages.size(); }
+
+    void setNumOfLanguages(int n)                   { numOfLanguages = n; }
+    int getNumOfLanguages()                         { return numOfLanguages; }
 
     inline
     size_t size() const                             { return cards.size(); }
@@ -150,6 +154,7 @@ struct Deck{
 private:
     QString title;
     QStringList languages;
+    int numOfLanguages;
     QList<Flashcard> cards;
     unsigned int keyIndex;
 };

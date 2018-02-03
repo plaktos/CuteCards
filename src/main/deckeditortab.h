@@ -2,6 +2,7 @@
 #define DECKEDITORTAB_H
 
 #include <QWidget>
+#include<QFrame>
 #include<QList>
 #include<QFileDialog>
 #include<QJsonDocument>
@@ -9,9 +10,32 @@
 #include<QLineEdit>
 
 #include "deck.h"
+#include "deckloader.h"
 #include "wordsearcher.h"
 #include "wordeditor.h"
 #include "deckeditorsavebar.h"
+
+class DeckOptionsPanel : public QFrame
+{
+    Q_OBJECT
+public:
+    explicit
+    DeckOptionsPanel(QWidget* parent = nullptr);
+
+    QString getTitle() const                   { return titleLineEdit->text(); }
+
+signals:
+    void ImportCSVButtonPressed();
+    void ExportCSVButtonPressed();
+
+
+private:
+    QGridLayout *mainLayout;
+
+    QLineEdit *titleLineEdit;
+    QPushButton *importCSVButton;
+    QPushButton *exportCSVButton;
+};
 
 class DeckEditorTab : public QWidget
 {
@@ -26,6 +50,8 @@ signals:
 
 public slots:
     void saveDeck();
+    void importDeckFromCSV();
+    void exportDeckToCSV();
     void LoadFlashcardAtIntoWordEditor(int index);
     void addFlashcardToWorkingDeck(const Flashcard& card);
     void saveFlashcardToWorkingDeck(const int &index,
@@ -37,9 +63,9 @@ private:
 
     QGridLayout *mainLayout;
 
-    QLineEdit *deckTitleEditor;
     WordSearcher *wordSearcher;
     WordEditor *wordEditor;
+    DeckOptionsPanel *deckOptionsPanel;
     DeckEditorSaveBar *deckEditorSaveBar;
     Deck workingDeck;
 

@@ -78,6 +78,20 @@ DeckSelectionTab::StartExam(int index){
         currExamDeck->setLanguages(availableDecks[indexes[0]].getLanguages());
         currExamDeck->setKey(index);
         currExamDeck->setTitle("Exam Deck");
+        ShuffleExamDeck();
         emit ExamToStartWithDeck(currExamDeck.toWeakRef());
+    }
+}
+
+void
+DeckSelectionTab::ShuffleExamDeck(){
+    QRandomGenerator rand = QRandomGenerator::securelySeeded();
+    int n = currExamDeck.data()->size();
+    while(n > 1){
+        int i = rand.bounded(0,n);
+        --n;
+        Flashcard temp = currExamDeck.data()->at(n);
+        currExamDeck.data()->operator [](n) = currExamDeck.data()->operator [](i);
+        currExamDeck.data()->operator [](i) = temp;
     }
 }

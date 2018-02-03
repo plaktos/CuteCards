@@ -32,20 +32,24 @@ DeckScrollListEntry::DeckScrollListEntry(int index,
     selectedCheckBox = new QCheckBox(this);
     selectedCheckBox->setVisible(false);
     titleLabel = new DeckLabel(title);
-
     languageLabel = new DeckLabel;
+
+    QFont labelFont(titleLabel->font());
+    labelFont.setPointSizeF(labelFont.pointSizeF() + 4);
+    labelFont.setBold(true);
+
+    titleLabel->setFont(labelFont);
+
     QString languageLabelText;
-    QFont languageLabelFont(languageLabel->font());
-    languageLabelFont.setPointSizeF(languageLabelFont.pointSizeF()-1.8);
     languageLabelText.append(langs[0]);
     for(int i = 1; i < langs.size(); ++i){
         languageLabelText.append(QString(",") + langs[i]);
     }
     languageLabel->setText(languageLabelText);
-    languageLabel->setFont(languageLabelFont);
+    languageLabel->setFont(labelFont);
 
     editButton = new QPushButton("E");
-    editButton->setMaximumSize(20,15);
+    editButton->setMaximumSize(20,20);
 
     // Setup Layout
     mainLayout = new QHBoxLayout;
@@ -54,6 +58,7 @@ DeckScrollListEntry::DeckScrollListEntry(int index,
     mainLayout->addWidget(titleLabel);
     mainLayout->addSpacing(10);
     mainLayout->addWidget(languageLabel);
+    mainLayout->addStretch(1);
 
     // Setup this
     setLayout(mainLayout);

@@ -82,6 +82,7 @@ public:
     void setFlashcard(int index, const Flashcard& card);
     void InitWithDeck(const Deck& deck);
     QStringList getLanguages()              { return scrollList->getLanguages(); }
+    void setLanguageEditMode(bool flag)     { bottomButtonBar->setLanguageEditMode(flag); }
 signals:
     void addCardPressedWithCard(const Flashcard& card);
     void saveCardPressedWithCard(int index,

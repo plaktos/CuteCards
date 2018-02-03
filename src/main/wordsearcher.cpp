@@ -14,9 +14,11 @@ WordSearcher::WordSearcher(QWidget *parent)
     wordScrollArea->setPalette(scrollAreaPalette);
 
 
-    mainLayout = new QVBoxLayout;
-    mainLayout->addWidget(searchBar);
-    mainLayout->addWidget(wordScrollArea);
+    mainLayout = new QGridLayout;
+    mainLayout->setContentsMargins(0,0,0,0);
+    mainLayout->setSpacing(0);
+    mainLayout->addWidget(searchBar, 0,1,1,1);
+    mainLayout->addWidget(wordScrollArea, 1,0,1,2);
 
     setLayout(mainLayout);
     setMinimumSize(300,350);

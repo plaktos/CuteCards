@@ -7,6 +7,7 @@ WordSearcherBar::WordSearcherBar(QWidget *parent)
     searchTimer->setSingleShot(true);
 
     setPlaceholderText("Search...");
+    setMaximumWidth(200);
 
     connect(searchTimer, &QTimer::timeout,
             [this] () {

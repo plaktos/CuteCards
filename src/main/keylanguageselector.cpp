@@ -10,6 +10,11 @@ KeyLanguageSelector::KeyLanguageSelector(QWidget *parent)
     mainLayout->setAlignment(Qt::AlignCenter);
     mainLayout->addSpacing(1);
 
+    QPalette pal(palette());
+    pal.setColor(QPalette::Background, Qt::gray);
+
+    setPalette(pal);
+    setAutoFillBackground(true);
     setLayout(mainLayout);
 }
 

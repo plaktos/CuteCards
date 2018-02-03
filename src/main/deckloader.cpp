@@ -30,6 +30,44 @@ DeckLoader::fromDeckFile(const QString &filename){
     return parseDeck(doc);
 }
 
+Deck
+DeckLoader::fromCSVFile(const QString &filename){
+    QFile csvfile(filename);
+    if(!csvfile.open(QIODevice::ReadOnly)){
+        qDebug() << "Couldn't open " << filename;
+        qDebug() << "Returning empty deck";
+        return Deck();
+    }
+
+    Deck retDeck;
+    QTextStream in(&csvfile);
+    in.setCodec("UTF-8");
+    while(!in.atEnd()){
+        QStringList wordsOnLine = in.readLine().split(',', QString::SkipEmptyParts);
+        retDeck.addCard(Flashcard(wordsOnLine));
+    }
+    csvfile.close();
+
+    if(retDeck.empty()){
+        qDebug() << "CSV file has no words";
+        qDebug() << "Returning empty deck";
+        return retDeck;
+    }
+
+    int numOfWordsInACard = retDeck.at(0).size();
+    for(int i = 0; i < retDeck.size(); ++i){
+        if(retDeck.at(i).size() != numOfWordsInACard){
+            qDebug() << "Invalid deck read from csv file";
+            qDebug() << "Number of words not equal on all lines";
+            qDebug() << "Returning empty deck";
+            return Deck();
+        }
+    }
+
+    retDeck.setNumOfLanguages(numOfWordsInACard);
+    return retDeck;
+}
+
 bool
 DeckLoader::validateDeck(const QJsonDocument& doc){
     //If the base is not an object

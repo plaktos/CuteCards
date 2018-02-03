@@ -167,7 +167,8 @@ DeckScrollList::getSelectedEntries(){
     QMap<int, bool>::const_iterator begin = selectedEntries.constBegin();
     QMap<int, bool>::const_iterator end = selectedEntries.constEnd();
     while(begin != end){
-        indexes.push_back(begin.key());
+        if(begin.value() == true)
+            indexes.push_back(begin.key());
         ++begin;
     }
     return indexes;

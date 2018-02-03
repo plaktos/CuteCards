@@ -35,7 +35,7 @@
  * there may be time when there are 3 rest words, and there may be time when there is only 2.
 */
 
-#include<QWidget>
+#include<QFrame>
 #include<QSize>
 #include<QWeakPointer>
 #include<QList>
@@ -52,6 +52,7 @@ const static unsigned int EXAM_MAINBOX_MIN_HEIGHT = EXAM_MAINBOX_MIN_WIDTH;
 
 const static unsigned int EXAM_LOWERBOX_HINT_WIDTH = EXAM_MAINBOX_HINT_WIDTH;
 const static unsigned int EXAM_LOWERBOX_HINT_HEIGHT = EXAM_MAINBOX_HINT_HEIGHT/3;
+
 
 class LowerBox : public QWidget
 {
@@ -77,17 +78,16 @@ private:
 
     QVBoxLayout *mainLayout;
 
-    QFont restWordsFont;
     QList<QLabel *> restWordsLabels;
 };
 
-class ExamMainBox : public QWidget
+class ExamMainBox : public QFrame
 {
     Q_OBJECT
 public:
     explicit ExamMainBox(QWidget *parent = nullptr);
 
-    QSize sizeHint() const override                     { return QSize(EXAM_MAINBOX_HINT_WIDTH, EXAM_MAINBOX_HINT_HEIGHT); }
+    QSize sizeHint() const override                     { return QSize(400,400); }
 
 signals:
     void toRevealCard();
@@ -113,9 +113,7 @@ private:
     // Deletes the current LowerBox and reinstates it.
     void resetLowerBox();
 
-    inline
-    void setKeyWord(const QString& key)                 { keyWordString = key;
-                                                          keyWordLabel->setText(key); }
+    void setKeyWord(const QString& key);
 
     inline
     void setRestWords(const QStringList wordlist)       { restWordsList = wordlist;

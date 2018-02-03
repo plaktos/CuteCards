@@ -27,6 +27,7 @@
 #include<QStringList>
 #include<QMap>
 #include<QGridLayout>
+#include<QRandomGenerator>
 
 #include<algorithm>
 
@@ -74,6 +75,8 @@ public slots:
 protected:
 
 private:
+    void ShuffleExamDeck();
+
     QVBoxLayout *mainLayout;
 
     DeckSearcher *availableDecksSearcher;
