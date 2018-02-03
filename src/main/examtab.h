@@ -39,11 +39,6 @@
 
 #include "exammainbox.h"
 #include "deckloader.h"
-#include "windowdefines.h"
-
-//Exam tab variables
-const static unsigned int EXAMTAB_HINT_WIDTH = MAINWINDOW_HINT_WIDTH;
-const static unsigned int EXAMTAB_HINT_HEIGHT = MAINWINDOW_HINT_HEIGHT;
 
 class ExamTab : public QWidget
 {
@@ -53,7 +48,7 @@ public:
     explicit
     ExamTab(QWidget *parent = nullptr);
 
-    QSize sizeHint() const override                 { return QSize(EXAMTAB_HINT_WIDTH,EXAMTAB_HINT_HEIGHT); }
+    QSize sizeHint() const override                 { return QSize(800,600); }
 
 signals:
     // Sends out a signal with the current key and restwords data of the

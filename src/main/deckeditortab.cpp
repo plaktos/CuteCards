@@ -1,26 +1,24 @@
+//
+//This file is part of CuteCards software.
+//
+//    CuteCards is Flashcard software developed in C++, with the use of the Qt Framework
+//    Copyright (C) 2018 Peter Lakatos
+//
+//    CuteCards is free software: you can redistribute it and/or modify
+//    it under the terms of the GNU General Public License as published by
+//    the Free Software Foundation, either version 3 of the License, or
+//    (at your option) any later version.
+//
+//    CuteCards is distributed in the hope that it will be useful,
+//    but WITHOUT ANY WARRANTY; without even the implied warranty of
+//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//    GNU General Public License for more details.
+//
+//    You should have received a copy of the GNU General Public License
+//    along with CuteCards.  If not, see <http://www.gnu.org/licenses/>.
+//
+
 #include "deckeditortab.h"
-
-DeckOptionsPanel::DeckOptionsPanel(QWidget *parent)
-    : QFrame(parent)
-{
-    titleLineEdit = new QLineEdit;
-    titleLineEdit->setPlaceholderText("Title...");
-
-    importCSVButton = new QPushButton("Import CSV");
-    exportCSVButton = new QPushButton("Export CSV");
-
-    mainLayout = new QGridLayout;
-    mainLayout->addWidget(titleLineEdit, 0,0, 1,2);
-    mainLayout->addWidget(exportCSVButton, 1,0, 1,1);
-    mainLayout->addWidget(importCSVButton, 1,1, 1,1);
-
-    setLayout(mainLayout);
-
-    connect(importCSVButton, &QPushButton::pressed,
-            this, &DeckOptionsPanel::ImportCSVButtonPressed);
-    connect(exportCSVButton, &QPushButton::pressed,
-            this, &DeckOptionsPanel::ExportCSVButtonPressed);
-}
 
 DeckEditorTab::DeckEditorTab(QWidget *parent)
     : QWidget(parent)
@@ -42,18 +40,18 @@ DeckEditorTab::DeckEditorTab(QWidget *parent)
 
     connect(deckEditorSaveBar, &DeckEditorSaveBar::saveButtonPressed,
             this, &DeckEditorTab::saveDeck);
+    connect(deckEditorSaveBar, &DeckEditorSaveBar::saveButtonPressed,
+            this, &DeckEditorTab::finishedDeckEditing);
     connect(deckEditorSaveBar, &DeckEditorSaveBar::cancelButtonPressed,
             this, &DeckEditorTab::finishedDeckEditing);
 
     connect(wordEditor, &WordEditor::addCardPressedWithCard,
             this, &DeckEditorTab::addFlashcardToWorkingDeck);
-
     connect(wordEditor, &WordEditor::saveCardPressedWithCard,
             this, &DeckEditorTab::saveFlashcardToWorkingDeck);
 
     connect(wordSearcher, &WordSearcher::ToDeleteEntryAt,
             this, &DeckEditorTab::deleteFlashcardFromWorkingDeckAt);
-
     connect(wordSearcher, &WordSearcher::ToEditFlashcardAt,
             this, &DeckEditorTab::LoadFlashcardAtIntoWordEditor);
 
@@ -69,6 +67,7 @@ DeckEditorTab::DeckEditorTab(QWidget *parent)
 void
 DeckEditorTab::loadDeck(const Deck &deck){
     workingDeck = deck;
+    deckOptionsPanel->clearTitle();
     wordEditor->InitWithDeck(workingDeck);
     emit workingDeckChanged(workingDeck);
 }
@@ -77,11 +76,21 @@ void
 DeckEditorTab::importDeckFromCSV(){
     QString filename = QFileDialog::getOpenFileName(this, "Open .CSV",
                                                     "./", "CSV(*.csv)");
+
     workingDeck = DeckLoader::fromCSVFile(filename);
-    for(int i = 0; i < workingDeck.getNumOfLanguages(); ++i){
-        wordEditor->PromptToAddLanguageToScrollList();
+
+    // If the deck is not empty, prompt the user to add languages,
+    // equal to the number of needed languages in the deck.
+    if(!workingDeck.empty()){
+        for(int i = 0; i < workingDeck.getNumOfLanguages(); ++i){
+            wordEditor->PromptToAddLanguageToScrollList();
+        }
+        wordEditor->setLanguageEditMode(false);
     }
-    wordEditor->setLanguageEditMode(false);
+    else{
+        wordEditor->setLanguageEditMode(true);
+    }
+
     emit workingDeckChanged(workingDeck);
 }
 
@@ -111,7 +120,6 @@ DeckEditorTab::saveFlashcardToWorkingDeck(const int &index, const Flashcard &car
     }
 }
 
-
 void
 DeckEditorTab::deleteFlashcardFromWorkingDeckAt(const int &index)
 {
@@ -125,7 +133,7 @@ DeckEditorTab::saveDeck(){
         workingDeck.setTitle(deckOptionsPanel->getTitle());
         workingDeck.setLanguages(wordEditor->getLanguages());
         QString filename = QFileDialog::getSaveFileName(this, "Save as .deck",
-                                                        "./res", "Decks (*.deck)");
+                                                        "./decks", "Decks (*.deck)");
         QFile deckfile(filename);
         if(!deckfile.open(QIODevice::WriteOnly)){
             qWarning("Couldn't open file for writing.");
@@ -135,6 +143,5 @@ DeckEditorTab::saveDeck(){
         QJsonDocument json(workingDeck.ToJsonObject());
         deckfile.write(json.toJson());
         deckfile.close();
-        emit finishedDeckEditing();
     }
 }

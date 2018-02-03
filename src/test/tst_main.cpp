@@ -1,10 +1,12 @@
 #include <QtTest/QtTest>
 
+#include"tst_deckloader.h"
+
 int main(){
     //Unit Tests
 
-    //Test test;
-    //QTest::qExec(&test);
+    test_deckloader deckLoaderTest;
+    QTest::qExec(&deckLoaderTest);
 
     return 0;
 }

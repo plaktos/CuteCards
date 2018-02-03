@@ -58,8 +58,8 @@ DeckScrollList::doATitleSearch(const QString& text){
     if(!(text == "")){
         emptyTitleSearch = false;
         // If language lock mode is active we only search in the
-        // ones that are already shown, and we set the ones,
-        // that dont match the title to not be shown
+        // ones that are search matched, we set the ones,
+        // that dont match the title to not be search matched
         if(languageLockMode){
             for(int i = 0; i < scrollListEntries.size(); ++i){
                 if(searchedEntries[i] == true){
@@ -78,6 +78,7 @@ DeckScrollList::doATitleSearch(const QString& text){
             }
         }
     }
+    // If text is empty, we set search matched to true for all entries
     else{
         emptyTitleSearch = true;
         for(int i = 0; i < scrollListEntries.size(); ++i){
@@ -96,12 +97,16 @@ DeckScrollList::doALanguageSearch(const QString& text){
                     searchedEntries[i] = true;
                 else
                     searchedEntries[i] = false;
+
+                break;
             }
         }
     }
+    // If text is empty all of the entries are search matched
     else{
-        for(auto entry : scrollListEntries)
-            entry->setHidden(false);
+        for(int i = 0; i < scrollListEntries.size(); ++i){
+            searchedEntries[i] = true;
+        }
     }
     refreshEntries();
 }
@@ -113,6 +118,16 @@ DeckScrollList::setSelectedForEntryAt(int index, bool flag){
     QMap<int, bool>::const_iterator begin = selectedEntries.constBegin();
     QMap<int, bool>::const_iterator end = selectedEntries.constEnd();
 
+    // Every time a selection state changes we have to iterate through
+    // all the entries in selectedEntries, and see if any of their state
+    // is set to true(selected), if so there is a selection active,
+    // if there is not then we have to unlock the languages.
+    // because if there is no selection there is no need to look for
+    // language compatible decks.
+    //
+    // Furthermore if there is a selection and it is a new selection,
+    // that just got made (there is no lock on the languages yet).
+    // then we have to lock the langguages
     selectionActive = false;
     while(begin != end){
         if(begin.value() == true){
@@ -136,21 +151,21 @@ void
 DeckScrollList::refreshEntries(){
     setHiddenForAllEntry(true);
 
-    // If there are selections we have to check if the flag for the entry's index
-    // is set to true in both searchedEntries and selectedEntries
+    // If there are selections
     if(selectionActive){
         for(int i = 0; i < scrollListEntries.size(); ++i){
-            // if selected entries contains the index and it is true
-            //(the second argument is the default value in case index is not in selectedEntries.
+            // if selected entries contains the index and it is true,
+            // or if the search wasnt an empty search, and the entry is search and language matched
+            // or if there was an empty search and the entry is language matched,
+            // then we show the entry
             if(selectedEntries.value(i, false) ||
                (!emptyTitleSearch && searchedEntries[i] == true && languageMatchedEntries.value(i,false))||
                (emptyTitleSearch && languageMatchedEntries.value(i, false)))
                     scrollListEntries[i]->setHidden(false);
         }
     }
-    // if there are no selections we just check if the flag for the
-    // corresponding index in searchedEntries is set to true
-    //
+    // if there are no selections we just check if the entry
+    // is search matched
     else{
         for(int i = 0; i < scrollListEntries.size(); ++i){
             if(searchedEntries[i] == true){
@@ -158,6 +173,9 @@ DeckScrollList::refreshEntries(){
             }
         }
     }
+
+    // call resize so the widget expands to the correct size
+    // based on how many entries are shown.
     resize(sizeHint());
 }
 

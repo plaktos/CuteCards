@@ -25,9 +25,10 @@
  * DeckScrollList holds a list of DeckScrollListEntry widgets
  * provides a way for the user to select one more multiple decks
  * and then send a signal with these indexes.
- * Should be contained within a DeckSearcher, which provides a SearchBar,
- * whose NeedSearch signals need to be connected to the corresponding slots
- * Apply DeckScrollArea to it after construction to make it scrollable.
+ * Upon selecting a deck the list gets refreshed, to only show compatible decks.
+ * Contained within a DeckSearcher, which provides a SearchBar,
+ * whose NeedSearch signals is connected to the corresponding slots.
+ * QScrollArea is applied to it after construction to make it scrollable.
 */
 
 #include <QWidget>
@@ -36,80 +37,106 @@
 #include<QRegularExpression>
 #include<QScrollArea>
 
-#include "windowdefines.h"
 #include "deckscrolllistentry.h"
 #include "deck.h"
-
-const static unsigned int DECKSCROLLIST_HINT_HEIGHT = MAINWINDOW_HINT_HEIGHT-200;
-const static unsigned int DECKSCROLLIST_HINT_WIDTH = MAINWINDOW_HINT_WIDTH/2-50;
-
-class DeckScrollArea : public QScrollArea
-{
-    Q_OBJECT
-public:
-    explicit
-    DeckScrollArea(QWidget *parent = nullptr)
-        : QScrollArea(parent)                                       {setSizePolicy(QSizePolicy::MinimumExpanding,
-                                                                                   QSizePolicy::MinimumExpanding);}
-};
 
 class DeckScrollList : public QWidget
 {
     Q_OBJECT
 public:
-    explicit DeckScrollList(QWidget *parent = nullptr);
+    explicit
+    DeckScrollList(QWidget *parent = nullptr);
+
     ~DeckScrollList()                                               { clearEntries(); }
 
-    QSize sizeHint() const override                                 { return QSize(100,
-                                                                                   100); }
+    // sizeHint returns a low number because the sizePolicy is set to expanding.
+    // resize is called everytime the list gets refreshed.
+    // this is to ensure the widget never over expands.
+    QSize sizeHint() const override                                 { return QSize(100, 100); }
 
     // Adds a new DeckScrollListEntry, and intializes a label,
     // based on the deck passed as argument.
+    // connects the new entry with editButtonPressedOnEntry,
+    // and setSelectedForEntryAt
     void addEntry(const Deck *d);
 
     // Return the indexes of the decks selected by the user
     QVector<int> getSelectedEntries();
 
-    // Deletes all previous Labels and clears deckList
+    // Deletes all previous labels and clears deckList
     void clearEntries();
 
 signals:
-    // Send when the user wishes to edit one of the decks in the entry list
+    // Sent when the user wishes to edit one of the decks in the entry list
+    // CentralWidget is connected to it and switches to Deck Edit tab,
+    // loading the deck at index into the editor.
     void EditButtonPressedOnEntry(const int &index);
 
-    // Locks the current languages, so the user can only select decks with the
-    // same languages.
+    // Emitted when the language lock mode changes,
+    // Language lock mode happens when the user first selects a deck,
+    // the languages of the selected deck which other decks can be selected.
+    // connected with DeckSearchBar in DeckSearcher,
+    // notifies that the search bar should be locked down.
     void languageLockModeChanged(bool lock);
+
+    // Notifies DeckSearcher which deck's languages is locked,
+    // used by KeyLanguageSelector to determine which languages
+    // can the user choose between to become the key language for the exam.
     void languagesLockedFromDeckAt(int index);
+
+    // Nootifies DeckSearcher that the language lock mode is cleared,
+    // and KeyLanguageSelector should be cleared.
     void languageLockModeCleared();
 
 public slots:
-    //Searches for textToSearchFor in the deck Titles, and makes the Labels,
-    //which correspond to those titles visible
+    // Searches for the argument text in the deck Titles, and marks the decks,
+    // with matching titles for search matched.
+    // this determines whether they are shown to the user or not in the
+    // refreshEntries method.
     void doATitleSearch(const QString &text);
+
+    // Searches for the argument text in the deck langauges,
+    // if it matches it marks the deck as search matched
     void doALanguageSearch(const QString &text);
+
+    // Connected with DeckScrollListEntries,
+    // upon changing the selection state of a DeckScrollListEntry it sends a signal,
+    // with it's id and selection flag.
+    // That signal is connected to this methor,
+    // which stores it in selectedEntries.
     void setSelectedForEntryAt(int index, bool flag);
 
 private:
-    //Hides all labels, called by doASearch(), before doing a search
+    // Determines which decks should be visible to the user,
+    // based on previous selections and searches,
+    // And then changes the corresponding deck's entry's hidden parameter.
     void refreshEntries();
+
+    // Calls setHidden(true) for all entries
     void setHiddenForAllEntry(bool flag);
+
+    // Calls setHidden(flag) for entry at index
     void setHiddenForEntryAt(int index, bool flag);
+
+    // Sets languageLockMode to true and adds the entries,
+    // that match the argument languages to languageMatchedEntries.
     void lockLanguages(const QStringList& list);
     void unlockLanguages();
 
-    // Layout is vertical. Labels are listed one after another
     QVBoxLayout *mainLayout;
 
     QList<DeckScrollListEntry *> scrollListEntries;
 
-    QMap<int, bool> selectedEntries;
     bool selectionActive;
     // A map to keep track of entries that match the search,
     // we search within this to see which ones are selected.
     // in index - bool fashion. Initially all of them are set to 1,
     // meaning they all match the search
     QMap<int, bool> searchedEntries;
+
+    // Contains indexes of entries that are selected
+    QMap<int, bool> selectedEntries;
+    // Contains indexes of entries that are matched by language.
     QMap<int, bool> languageMatchedEntries;
 
     bool languageLockMode;

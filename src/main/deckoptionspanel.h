@@ -18,40 +18,43 @@
 //    along with CuteCards.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#ifndef KEYLANGUAGESELECTOR_H
-#define KEYLANGUAGESELECTOR_H
+#ifndef DECKOPTIONSPANEL_H
+#define DECKOPTIONSPANEL_H
 
 /*
- * Provides a panel for the user to select which language
- * should be the key language.
- * getKeyLanguageIndex returns the index of the selected language
+ *
+ * Provides a panel in Deck Editor tab for altering the deck title
+ * and importing/exporting other formats.
+ * getTitle() returns the title entered for the deck by the user
+ * Sends the signals ImportCSVButtonPressed, ExportCSVButtonPressed
 */
 
-#include <QWidget>
-#include<QRadioButton>
-#include<QLabel>
-#include<QHBoxLayout>
-#include<QFont>
+#include <QFrame>
+#include<QPushButton>
+#include<QLineEdit>
+#include<QGridLayout>
 
-class KeyLanguageSelector : public QWidget
+class DeckOptionsPanel : public QFrame
 {
     Q_OBJECT
 public:
-    explicit KeyLanguageSelector(QWidget *parent = nullptr);
+    explicit
+    DeckOptionsPanel(QWidget* parent = nullptr);
 
-    void addLanguage(const QString& lang);
-    void clear();
+    QString getTitle() const                   { return titleLineEdit->text(); }
+    void clearTitle()                          { titleLineEdit->clear(); }
 
-    int getKeyLanguageIndex();
 signals:
+    void ImportCSVButtonPressed();
+    void ExportCSVButtonPressed();
 
-public slots:
 
 private:
-    QHBoxLayout *mainLayout;
-    QVector<QLabel *> langLabels;
-    QVector<QRadioButton *> radioButtons;
-    QFont langLabelFont;
+    QGridLayout *mainLayout;
+
+    QLineEdit *titleLineEdit;
+    QPushButton *importCSVButton;
+    QPushButton *exportCSVButton;
 };
 
-#endif // KEYLANGUAGESELECTOR_H
+#endif // DECKOPTIONSPANEL_H

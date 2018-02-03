@@ -1,74 +1,24 @@
+//
+//This file is part of CuteCards software.
+//
+//    CuteCards is Flashcard software developed in C++, with the use of the Qt Framework
+//    Copyright (C) 2018 Peter Lakatos
+//
+//    CuteCards is free software: you can redistribute it and/or modify
+//    it under the terms of the GNU General Public License as published by
+//    the Free Software Foundation, either version 3 of the License, or
+//    (at your option) any later version.
+//
+//    CuteCards is distributed in the hope that it will be useful,
+//    but WITHOUT ANY WARRANTY; without even the implied warranty of
+//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//    GNU General Public License for more details.
+//
+//    You should have received a copy of the GNU General Public License
+//    along with CuteCards.  If not, see <http://www.gnu.org/licenses/>.
+//
+
 #include "wordeditor.h"
-
-WordEditorButtonBarButton::WordEditorButtonBarButton(const QString &text, QWidget *parent)
-    : QPushButton(text,parent)
-{
-    QSizePolicy(QSizePolicy::Fixed,
-                QSizePolicy::Fixed);
-}
-
-QSize
-WordEditorButtonBarButton::sizeHint() const {
-    return QSize(50,35);
-}
-
-WordEditorButtonBar::WordEditorButtonBar(QWidget *parent)
-    : QWidget(parent),
-      saveMode(false)
-{
-    newCardButton = new WordEditorButtonBarButton("New Word");
-    alternatingButton = new WordEditorButtonBarButton("Add Word");
-    addLanguageButton = new WordEditorButtonBarButton("Add language");
-    finishedLanguageAddingButton = new WordEditorButtonBarButton("Finished");
-
-    mainLayout = new QHBoxLayout;
-    mainLayout->addWidget(addLanguageButton);
-    mainLayout->addWidget(finishedLanguageAddingButton);
-    mainLayout->addWidget(newCardButton);
-    mainLayout->addWidget(alternatingButton);
-
-    setLayout(mainLayout);
-
-    connect(addLanguageButton, &QPushButton::pressed,
-            this, &WordEditorButtonBar::AddLanguageButtonPressed);
-
-    connect(newCardButton, &QPushButton::pressed,
-            this, &WordEditorButtonBar::NewCardButtonPressed);
-    connect(newCardButton, &QPushButton::pressed,
-            [this] (){
-       alternatingButton->setText("Add");
-       saveMode = false;
-    });
-
-    connect(alternatingButton, &QPushButton::pressed,
-            [this] () {
-        if(saveMode)
-            emit SaveButtonPressed();
-        else
-            emit AddButtonPressed();
-    });
-
-    connect(finishedLanguageAddingButton, &WordEditorButtonBarButton::pressed,
-            [this](){
-        setLanguageEditMode(false);
-    });
-}
-
-void
-WordEditorButtonBar::setLanguageEditMode(bool flag){
-    if(flag){
-        newCardButton->setHidden(true);
-        alternatingButton->setHidden(true);
-        addLanguageButton->setHidden(false);
-        finishedLanguageAddingButton->setHidden(false);
-    }
-    else{
-        newCardButton->setHidden(false);
-        alternatingButton->setHidden(false);
-        addLanguageButton->setHidden(true);
-        finishedLanguageAddingButton->setHidden(true);
-    }
-}
 
 AddLanguageDialog::AddLanguageDialog(QWidget *parent)
     : QDialog(parent),
@@ -150,6 +100,13 @@ WordEditor::WordEditor(QWidget *parent)
 
     connect(bottomButtonBar, &WordEditorButtonBar::AddLanguageButtonPressed,
             this, &WordEditor::PromptToAddLanguageToScrollList);
+
+    connect(bottomButtonBar, &WordEditorButtonBar::FinishedLanguageAddingButtonPressed,
+            [this](){
+        if(!(scrollList->getLanguages().size() < 2)){
+            bottomButtonBar->setLanguageEditMode(false);
+        }
+    });
 }
 
 QSize

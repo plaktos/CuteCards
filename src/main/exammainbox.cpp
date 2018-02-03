@@ -20,8 +20,8 @@
 
 #include "exammainbox.h"
 
-LowerBox::LowerBox(const QStringList& restwords,
-                   QWidget *parent)
+ExamLowerBox::ExamLowerBox(const QStringList& restwords,
+                           QWidget *parent)
     : QWidget(parent)
 {
 
@@ -38,14 +38,14 @@ LowerBox::LowerBox(const QStringList& restwords,
 }
 
 void
-LowerBox::RevealWords(){
+ExamLowerBox::RevealWords(){
     for(auto &label: restWordsLabels){
         label->setHidden(false);
     }
 }
 
 void
-LowerBox::createRestWordLabel(const QString &string){
+ExamLowerBox::createRestWordLabel(const QString &string){
     QLabel *newLabel = new QLabel(string);
 
     newLabel->setAlignment(Qt::AlignCenter);
@@ -63,7 +63,7 @@ LowerBox::createRestWordLabel(const QString &string){
 }
 
 void
-LowerBox::initRestWordLabels(const QStringList& restwords){
+ExamLowerBox::initRestWordLabels(const QStringList& restwords){
     for(auto word : restwords){
         createRestWordLabel(word);
     }
@@ -104,10 +104,10 @@ void
 ExamMainBox::resetLowerBox(){
     if(!(lowerBox == nullptr))
         delete lowerBox;
-    lowerBox = new LowerBox(restWordsList);
+
+    lowerBox = new ExamLowerBox(restWordsList);
     lowerBox->setMaximumHeight(height()/2);
-    //lowerBox->setMinimumHeight(height()/2);
-    // Insert into layout at end - 1, (before the stretch)
+
     mainLayout->insertWidget(mainLayout->count()-1 ,lowerBox);
     connect(this, SIGNAL(toRevealCard()),
             lowerBox, SLOT(RevealWords()));

@@ -1,5 +1,42 @@
+//
+//This file is part of CuteCards software.
+//
+//    CuteCards is Flashcard software developed in C++, with the use of the Qt Framework
+//    Copyright (C) 2018 Peter Lakatos
+//
+//    CuteCards is free software: you can redistribute it and/or modify
+//    it under the terms of the GNU General Public License as published by
+//    the Free Software Foundation, either version 3 of the License, or
+//    (at your option) any later version.
+//
+//    CuteCards is distributed in the hope that it will be useful,
+//    but WITHOUT ANY WARRANTY; without even the implied warranty of
+//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//    GNU General Public License for more details.
+//
+//    You should have received a copy of the GNU General Public License
+//    along with CuteCards.  If not, see <http://www.gnu.org/licenses/>.
+//
+
 #ifndef WORDEDITOR_H
 #define WORDEDITOR_H
+
+/*
+ * WordEditor is a widget on the Deck Editor tab.
+ * Provides a way for the user to alter the Flashcards
+ * found in the deck.
+ * The user can create new ones or modify existing cards in the deck.
+ * Contains a WordEditorScrollList and a WordEditorButtonBar
+ * WordEditorScrollList contains a list of languages,
+ * that are found in the deck and a QLineEdit where the user can,
+ * enter or alter words for the corresponding language.
+ *
+ * AddLanguageDialog is a dialog that prompts the user for
+ * a language, which then gets added to the WordEditor.
+ * These dialogs are instated and their values are used in
+ * WordEditor::PromptPromptToAddLanguageToScrollList
+ *
+*/
 
 #include <QWidget>
 #include<QPushButton>
@@ -11,48 +48,7 @@
 
 #include"deck.h"
 #include"wordeditorscrolllist.h"
-
-class WordEditorButtonBarButton : public QPushButton
-{
-    Q_OBJECT
-public:
-    explicit
-    WordEditorButtonBarButton(const QString& text,
-                              QWidget *parent = nullptr);
-
-    QSize sizeHint() const override;
-
-};
-
-class WordEditorButtonBar : public QWidget
-{
-    Q_OBJECT
-public:
-    explicit
-    WordEditorButtonBar(QWidget* parent = nullptr);
-
-    bool isInSaveMode()                         { return saveMode; }
-signals:
-    void NewCardButtonPressed();
-    void SaveButtonPressed();
-    void AddButtonPressed();
-    void AddLanguageButtonPressed();
-
-public slots:
-    void changeToSaveButton()                   { alternatingButton->setText("Save");
-                                                  saveMode = true; }
-    void setLanguageEditMode(bool flag);
-
-private:
-    QHBoxLayout *mainLayout;
-    WordEditorButtonBarButton *newCardButton;
-    WordEditorButtonBarButton *alternatingButton;
-    WordEditorButtonBarButton *addLanguageButton;
-    WordEditorButtonBarButton *finishedLanguageAddingButton;
-
-    bool saveMode;
-    bool languageEditMode;
-};
+#include"wordeditorbuttonbar.h"
 
 class AddLanguageDialog : public QDialog
 {

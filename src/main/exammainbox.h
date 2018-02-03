@@ -23,16 +23,18 @@
 
 /*
  * ExamMainBox is a widget where the contents of the current Flashcard
- * on a Key, rest words basis. The key is the word initially shown to the user,
+ * on a Key, rest words basis are shown to the user.
+ * The key is the word initially shown to the user,
  * the rest words are the words shown after user interaction.
  *
- * ExamMainBox gets it's contents from ExamTab, it only has access to the current card's key
- * and rest words.
+ * ExamMainBox gets it's contents from ExamTab,
+ * it only has access to the current card's key and rest words.
  * Inside ExamMainBox is a LowerBox widget, which is used to draw labels with rest words contents.
  * LowerBox gets deleted and reinstated every time the user asks for the next card to be displayed.
  * This is to ensure that there is always an equal number of labels inside lower box to the number
  * of rest words on the Flashcard. Since the user will have the ability to merge decks,
  * there may be time when there are 3 rest words, and there may be time when there is only 2.
+ * (this is to be implemented)
 */
 
 #include<QFrame>
@@ -43,29 +45,19 @@
 #include<QLabel>
 
 #include "deck.h"
-#include "windowdefines.h"
 
-const static unsigned int EXAM_MAINBOX_HINT_WIDTH = MAINWINDOW_HINT_WIDTH/2;
-const static unsigned int EXAM_MAINBOX_HINT_HEIGHT = EXAM_MAINBOX_HINT_WIDTH;
-const static unsigned int EXAM_MAINBOX_MIN_WIDTH = EXAM_MAINBOX_HINT_WIDTH/2;
-const static unsigned int EXAM_MAINBOX_MIN_HEIGHT = EXAM_MAINBOX_MIN_WIDTH;
-
-const static unsigned int EXAM_LOWERBOX_HINT_WIDTH = EXAM_MAINBOX_HINT_WIDTH;
-const static unsigned int EXAM_LOWERBOX_HINT_HEIGHT = EXAM_MAINBOX_HINT_HEIGHT/3;
-
-
-class LowerBox : public QWidget
+class ExamLowerBox : public QWidget
 {
     Q_OBJECT
 public:
 
     explicit
-    LowerBox(const QStringList &restwords, QWidget* parent = nullptr);
+    ExamLowerBox(const QStringList &restwords, QWidget* parent = nullptr);
 
-    QSize sizeHint() const override                     { return QSize(EXAM_MAINBOX_HINT_WIDTH, EXAM_LOWERBOX_HINT_HEIGHT); }
+    QSize sizeHint() const override                     { return QSize(400, 400); }
 
 public slots:
-    //Initializes the Labels based on restWordList.
+    // Reveals all labels in restWordsLabels
     void RevealWords();
 
 private:
@@ -90,12 +82,11 @@ public:
     QSize sizeHint() const override                     { return QSize(400,400); }
 
 signals:
+    // connected to ExamLowerBox RevealWords slot,
+    // signals to reveal the rest word labels
     void toRevealCard();
 
-protected:
-
 public slots:
-
     // Changes the current key and rest words,
     // and then calls update() to make the keyword visible to the user.
     // Connected to ExamTab::changeToNextCard, which is emitted from
@@ -105,12 +96,12 @@ public slots:
                                                           setRestWords(restwords);
                                                           update(); }
 
-    // emitts toRevealCard, so that LowerBox reveals it's labels,
+    // emits toRevealCard, so that ExamLowerBox reveals it's labels,
     // and then calls update()
     void RevealCard();
 
 private:
-    // Deletes the current LowerBox and reinstates it.
+    // Deletes the current ExamLowerBox and reinstates it.
     void resetLowerBox();
 
     void setKeyWord(const QString& key);
@@ -123,7 +114,7 @@ private:
     QString keyWordString;
     QLabel *keyWordLabel;
     QStringList restWordsList;
-    LowerBox* lowerBox;
+    ExamLowerBox* lowerBox;
 };
 
 #endif // EXAMMAINBOX_H

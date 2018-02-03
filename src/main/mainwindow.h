@@ -35,7 +35,7 @@ public:
     MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
-    QSize sizeHint() const override                 { return QSize(MAINWINDOW_HINT_WIDTH,MAINWINDOW_HINT_HEIGHT); }
+    QSize sizeHint() const override                 { return QSize(800,600); }
 
 private:
 };

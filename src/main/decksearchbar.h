@@ -22,8 +22,9 @@
 #define DECKSEARCHBAR_H
 
 /*
- * To be implemented, currently just a QLineEdit
- *
+ * Search bar for the DeckSearcher in Deck Selection tab.
+ * Consists of two DeckSearchBarPart, one for title and one for language
+ * searches. Sends signals NeedTitleSearchFor and NeedLanguageSearchFor
 */
 
 #include<QWidget>
@@ -62,13 +63,14 @@ signals:
     void NeedLanguageSearchFor(const QString& text);
 
 public slots:
-    void setLanguageLock(bool lock)             { //titleSearcher->setReadOnly(lock);
-                                                  languageSearcher->setReadOnly(lock);
+    void setLanguageLock(bool lock)             { languageSearcher->setReadOnly(lock);
                                                   locked = lock;
                                                   update(); }
 
 protected:
-    void paintEvent(QPaintEvent *e);
+    // overridden paintEvent, if the language search bar is locked,
+    // it gets a dark grey background.
+    void paintEvent(QPaintEvent *e) override;
 
 private:
     QHBoxLayout *mainLayout;

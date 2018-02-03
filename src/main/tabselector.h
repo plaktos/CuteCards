@@ -25,15 +25,13 @@
  * Simple widget holding buttons corresponding to tabs,
  * sends out signals if they are pressed.
  *
- * Later will be customized for custom gui.
+ * Later will be customized for custom ui.
 */
 
 #include <QWidget>
 #include<QSize>
 #include<QVBoxLayout>
 #include<QPushButton>
-
-#include "windowdefines.h"
 
 class TabButton : public QPushButton
 {

@@ -21,7 +21,8 @@
 #ifndef DECKSCROLLLISTENTRY_H
 #define DECKSCROLLLISTENTRY_H
 
-/* DeckScrollListEntry widgets refer to corresponding
+/*
+ * DeckScrollListEntry widgets refer to corresponding
  * decks, and provide a way for the user to interact
  * with the decks.
 */
@@ -72,10 +73,6 @@ public:
                         QWidget *parent = nullptr);
 
     QSize sizeHint() const override                         { return QSize(500,35); }
-
-    // Used to determine whether the this widget,
-    // that refers to a deck is selected
-    bool isSelected()                                       { return selectedCheckBox->isChecked(); }
 
     QString getTitle()                                      { return titleLabel->text(); }
     QStringList getLanguages()                              { return languages; }

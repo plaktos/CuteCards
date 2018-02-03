@@ -41,19 +41,10 @@
 
 struct Deck{
 
-    Deck()
-        : title("Empty Deck"),
-          languages{"empty"}, numOfLanguages(0),
-          cards(),
-          keyIndex(0) {}
-
+    Deck();
     Deck(const QString& str_title,
          const QStringList list_langs,
-         const QList<Flashcard>& card_list)
-            : title(str_title),
-            languages(list_langs), numOfLanguages(list_langs.size()),
-            cards(card_list),
-            keyIndex(1) {}
+         const QList<Flashcard>& card_list);
 
     inline
     Flashcard& operator[](int i)                    { return cards[i]; }
@@ -85,8 +76,8 @@ struct Deck{
     inline
     void addCard(const Flashcard& card)             { cards.append(card); }
 
-    void
-    mergeDeck(const Deck& other)                    { cards += other.getCards(); }
+    inline
+    void mergeDeck(const Deck& other)               { cards += other.getCards(); }
 
     inline
     void removeAt(int i)                            { cards.removeAt(i); }
@@ -102,9 +93,11 @@ struct Deck{
 
     void setLanguages(const QStringList& langs)     { languages = langs;
                                                       numOfLanguages = languages.size(); }
-
+    inline
     void setNumOfLanguages(int n)                   { numOfLanguages = n; }
-    int getNumOfLanguages()                         { return numOfLanguages; }
+
+    inline
+    int getNumOfLanguages() const                   { return numOfLanguages; }
 
     inline
     size_t size() const                             { return cards.size(); }
@@ -116,40 +109,15 @@ struct Deck{
     int getKeyIndex() const                         { return keyIndex; }
 
     inline
-    QString keyLanguage() const                     {return languages[keyIndex];}
+    QString keyLanguage() const                     { return languages[keyIndex]; }
 
     inline
     void setKey(unsigned int i)                     { if(!(i > languages.size()-1)){
                                                         keyIndex = i;} }
 
-    QStringList withoutKey(unsigned int n)          { QStringList retlist;
-                                                      for(int i = 0; i < cards[n].size(); ++i){
-                                                          if(!(i == keyIndex))
-                                                              retlist.append(cards[n].at(i)); }
-                                                      return retlist; }
+    QStringList withoutKey(unsigned int n) const;
 
-    QJsonObject ToJsonObject() const
-    {
-        QJsonObject root;
-        QJsonObject properties;
-        QJsonArray wordArray;
-        QJsonArray languageArray;
-        for(auto lang : languages){
-            languageArray.append(lang);
-        }
-        for(auto card : cards){
-            QJsonArray currCardArray;
-            for(auto word : card){
-                currCardArray.append(word);
-            }
-            wordArray.append(currCardArray);
-        }
-        properties["Languages"] = languageArray;
-        properties["Title"] = title;
-        root["Properties"] = properties;
-        root["Words"] = wordArray;
-        return root;
-    }
+    QJsonObject ToJsonObject() const;
 
 private:
     QString title;

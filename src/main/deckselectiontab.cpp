@@ -43,20 +43,18 @@ DeckSelectionTab::DeckSelectionTab(QWidget* parent)
     connect(availableDecksSearcher, &DeckSearcher::EditButtonPressedOnEntry,
             this, &DeckSelectionTab::SignalToEditAvailableDeckAt);
 
-    // Temporary
     connect(availableDecksSearcher, &DeckSearcher::StartButtonPressedWithKeyIndex,
             this, &DeckSelectionTab::StartExam);
-
 }
 
 void
 DeckSelectionTab::LoadAvailableDecks(){
     availableDecks.clear();
 
-    QDir resDir("./res");
+    QDir resDir("./decks");
     QStringList entries = resDir.entryList(QStringList{"*.deck"});
     for(int i = 0; i < entries.size(); ++i){
-        QString path = QString("res/") + entries[i];
+        QString path = QString("decks/") + entries[i];
         Deck deck = DeckLoader::fromDeckFile(path);
         if(!deck.empty()){
             availableDecks.append(deck);
@@ -68,7 +66,7 @@ DeckSelectionTab::LoadAvailableDecks(){
 }
 
 void
-DeckSelectionTab::StartExam(int index){
+DeckSelectionTab::StartExam(int keylangindex){
     currExamDeck = QSharedPointer<Deck>(new Deck);
     QVector<int> indexes = availableDecksSearcher->selection();
     for(int i = 0; i < indexes.size(); i++){
@@ -76,7 +74,7 @@ DeckSelectionTab::StartExam(int index){
     }
     if(!currExamDeck.data()->empty()){
         currExamDeck->setLanguages(availableDecks[indexes[0]].getLanguages());
-        currExamDeck->setKey(index);
+        currExamDeck->setKey(keylangindex);
         currExamDeck->setTitle("Exam Deck");
         ShuffleExamDeck();
         emit ExamToStartWithDeck(currExamDeck.toWeakRef());

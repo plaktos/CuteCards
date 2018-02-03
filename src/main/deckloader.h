@@ -49,6 +49,8 @@ public:
     static
     Deck fromDeckFile(const QString& filename);
 
+    // Returns a deck parsed from a csv file.
+    // requires to user to enter the languages after loading
     static
     Deck fromCSVFile(const QString& filename);
 

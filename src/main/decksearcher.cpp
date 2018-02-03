@@ -32,7 +32,7 @@ DeckSearcher::DeckSearcher(QWidget *parent)
     keyLanguageSelector = new KeyLanguageSelector;
 
     // Add QScrollArea to deckScrollList
-    DeckScrollArea *scrollArea = new DeckScrollArea;
+    QScrollArea *scrollArea = new QScrollArea;
     scrollArea->setWidget(deckScrollList);
     QPalette scrollAreaPalette(scrollArea->palette());
     scrollAreaPalette.setColor(QPalette::Background, Qt::darkGray);

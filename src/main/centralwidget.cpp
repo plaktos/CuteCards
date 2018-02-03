@@ -121,6 +121,7 @@ CentralWidget::StartDeckEditorWithDeck(const Deck& deck){
     deckEditorTab->loadDeck(deck);
     HideAllTabs();
     deckEditorTab->setHidden(false);
+    tabSelector->setHidden(true);
 }
 
 void
