@@ -49,8 +49,8 @@ ExamLowerBox::createRestWordLabel(const QString &string){
     QLabel *newLabel = new QLabel(string);
 
     newLabel->setAlignment(Qt::AlignCenter);
-    newLabel->setMaximumHeight(50);
-    newLabel->setMinimumHeight(50);
+    newLabel->setMaximumHeight(100);
+    newLabel->setMinimumHeight(100);
     newLabel->setHidden(true);
 
     QFont font(newLabel->font());

@@ -62,10 +62,10 @@ ExamTab::ExamTab(QWidget *parent)
 
 void
 ExamTab::keyPressEvent(QKeyEvent *event){
-    if(event->key() == Qt::Key_Return){
+    if(event->key() == Qt::Key_Right){
         NextCard();
     }
-    else if(event->key() == Qt::Key_Space){
+    else if(event->key() == Qt::Key_Up){
         emit toRevealCard();
     }
     else{
