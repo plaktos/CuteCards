@@ -6,13 +6,16 @@ These can be created by hand in the Deck Editor or imported from CSV with minor 
 
 # Current state
 
-**Release-v0.1.0:**
+**Release-v0.1.1:**
   * Load decks from ./decks
   * Create decks in Deck Editor by hand
   * Create decks from CSV files
   * Select decks in the Deck Selector
   * Start an exam with the decks selected in Deck Selector
   * Select the key language (this determines which word is shown first)
+  * Hotkeys:
+     - Right arrow - Next card
+     - Up arrow - Reveal card
   
 **To do:**
   * Export to CSV
