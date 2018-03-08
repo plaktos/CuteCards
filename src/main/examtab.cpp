@@ -31,6 +31,8 @@ ExamTab::ExamTab(QWidget *parent)
     revealCardButton = new QPushButton("\u21BB");
     nextCardButton->setMinimumHeight(50);
     revealCardButton->setMinimumHeight(50);
+    nextCardButton->setFocusPolicy(Qt::NoFocus);
+    revealCardButton->setFocusPolicy(Qt::NoFocus);
 
     QFont buttonFont(nextCardButton->font());
     buttonFont.setPointSize(buttonFont.pointSize() + 12);
@@ -46,6 +48,7 @@ ExamTab::ExamTab(QWidget *parent)
 
     // Setup this
     setLayout(mainLayout);
+    setFocusPolicy(Qt::StrongFocus);
 
     //Connections with mainBox
     connect(this, &ExamTab::changeToCard,
@@ -77,7 +80,7 @@ void
 ExamTab::NextCard(){
     if(currCardIndex > deck.data()->size() - 1){
         //FinishExam();
-        releaseKeyboard();
+        //releaseKeyboard();
     }
     else{
         currKey = deck.data()->key(currCardIndex);
@@ -92,5 +95,5 @@ ExamTab::StartExamWithDeck(const QWeakPointer<Deck> &d){
     deck = d;
     currCardIndex = 0;
     NextCard();
-    grabKeyboard();
+    //grabKeyboard();
 }
