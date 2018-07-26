@@ -8,7 +8,7 @@ These can be created by hand in the Deck Editor or imported from CSV with minor 
 
 **Release-v0.1.2:**
 ***
-https://github.com/plaktos/CuteCards/releases/tag/v0.1.1f1
+https://github.com/plaktos/CuteCards/releases/tag/v0.1.2
 
   * Load decks from ./decks
   * Create decks in Deck Editor by hand
