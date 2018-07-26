@@ -6,7 +6,7 @@ These can be created by hand in the Deck Editor or imported from CSV with minor 
 
 # Current state
 
-**Release-v0.1.1f1:**
+**Release-v0.1.2:**
 ***
 https://github.com/plaktos/CuteCards/releases/tag/v0.1.1f1
 
