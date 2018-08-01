@@ -29,10 +29,11 @@ https://github.com/plaktos/CuteCards/releases/tag/v0.1.2
   
 Release versions come with pre-packaged decks, this is a list of decks in the latest version
 
+<img src="screenshot.png" width="500" height="300">
+
 **Available decks:**
   * HSK 1-6
 
-<img src="screenshot.png" width="800" height="600">
 
 # How can I use this
 
