@@ -32,7 +32,7 @@ Release versions come with pre-packaged decks, this is a list of decks in the la
 **Available decks:**
   * HSK 1-6
 
-<img src="cutecards.gif" width="850" height="550">
+<img src="screenshot.png" width="800" height="600">
 
 # How can I use this
 
