@@ -31,6 +31,8 @@
 #include <QWidget>
 #include<QVBoxLayout>
 #include<QPaintEvent>
+#include<memory>
+#include<vector>
 
 #include "flashcard.h"
 #include"wordscrolllistentry.h"
@@ -39,6 +41,7 @@ class WordScrollList : public QWidget
 {
     Q_OBJECT
 public:
+    ~WordScrollList();
     explicit WordScrollList(QWidget *parent = nullptr);
 
     void clear();
@@ -54,7 +57,7 @@ public slots:
 private:
 
     QVBoxLayout *mainLayout;
-    QList<WordScrollListEntry *> entries;
+    std::vector<std::unique_ptr<WordScrollListEntry>> entries;
 };
 
 #endif // WORDSCROLLLIST_H

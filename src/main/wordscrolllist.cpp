@@ -32,12 +32,12 @@ WordScrollList::WordScrollList(QWidget *parent)
                   QSizePolicy::Expanding);
 }
 
+WordScrollList::~WordScrollList(){
+    clear();
+}
+
 void
 WordScrollList::clear(){
-    for(auto &entry : entries){
-        delete entry;
-    }
-
     entries.clear();
 }
 
@@ -62,14 +62,14 @@ WordScrollList::searchFor(const QString &text){
 
 void
 WordScrollList::addEntry(const Flashcard &card){
-    WordScrollListEntry *entry = new WordScrollListEntry(entries.size());
+    std::unique_ptr<WordScrollListEntry> entry= std::make_unique<WordScrollListEntry>(entries.size());
     for(int i = 0; i < card.size(); ++i){
         entry->addWord(card.at(i));
     }
-    entries.append(entry);
-    mainLayout->insertWidget(mainLayout->count()-1, entry);
-    connect(entry, &WordScrollListEntry::selected,
+    mainLayout->insertWidget(mainLayout->count()-1, entry.get());
+    connect(entry.get(), &WordScrollListEntry::selected,
             this, &WordScrollList::EntrySelectedAt);
-    connect(entry, &WordScrollListEntry::DeleteButtonPressed,
+    connect(entry.get(), &WordScrollListEntry::DeleteButtonPressed,
             this, &WordScrollList::DeleteButtonPressedForEntryAt);
+    entries.push_back(std::move(entry));
 }

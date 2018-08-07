@@ -86,7 +86,7 @@ DeckLoader::validateDeck(const QJsonDocument& doc){
 
     //If "Title" key's value is not a string or if the "Languages" key's value is not an array.
     if(!properties["Title"].isString() || !properties["Languages"].isArray() ||
-            !words.count() > 0){
+            !(words.count() > 0)){
         return false;
     }
 

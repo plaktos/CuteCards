@@ -66,7 +66,7 @@ DeckSelectionTab::LoadAvailableDecks(){
 }
 
 void
-DeckSelectionTab::StartExam(int keylangindex){
+DeckSelectionTab::StartExam(unsigned int keylangindex){
     currExamDeck = QSharedPointer<Deck>(new Deck);
     QVector<int> indexes = availableDecksSearcher->selection();
     for(int i = 0; i < indexes.size(); i++){

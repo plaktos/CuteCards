@@ -36,7 +36,7 @@ Deck::Deck(const QString& str_title,
 
 
 QStringList
-Deck::withoutKey(unsigned int n) const {
+Deck::withoutKey(int n) const {
     QStringList retlist;
     for(int i = 0; i < cards[n].size(); ++i){
         if(!(i == keyIndex))

@@ -21,9 +21,7 @@
 #include "deckscrolllist.h"
 
 DeckScrollList::DeckScrollList(QWidget *parent)
-    : QWidget(parent),
-      languageLockMode(false), selectionActive(false),
-      emptyTitleSearch(true)
+    : QWidget(parent)
 {
 
     // Layout setup

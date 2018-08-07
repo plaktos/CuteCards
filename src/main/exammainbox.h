@@ -114,7 +114,7 @@ private:
     QString keyWordString;
     QLabel *keyWordLabel;
     QStringList restWordsList;
-    ExamLowerBox* lowerBox;
+    QScopedPointer<ExamLowerBox> lowerBox;
 };
 
 #endif // EXAMMAINBOX_H

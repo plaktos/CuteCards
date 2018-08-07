@@ -100,10 +100,10 @@ struct Deck{
     int getNumOfLanguages() const                   { return numOfLanguages; }
 
     inline
-    size_t size() const                             { return cards.size(); }
+    int size() const                                { return cards.size(); }
 
     inline
-    QString key(unsigned int n) const               { return cards.at(n).at(keyIndex); }
+    QString key(int n) const                        { return cards.at(n).at(keyIndex); }
 
     inline
     int getKeyIndex() const                         { return keyIndex; }
@@ -112,10 +112,10 @@ struct Deck{
     QString keyLanguage() const                     { return languages[keyIndex]; }
 
     inline
-    void setKey(unsigned int i)                     { if(!(i > languages.size()-1)){
+    void setKey(int i)                              { if(!(i > languages.size()-1)){
                                                         keyIndex = i;} }
 
-    QStringList withoutKey(unsigned int n) const;
+    QStringList withoutKey(int n) const;
 
     QJsonObject ToJsonObject() const;
 
@@ -124,7 +124,7 @@ private:
     QStringList languages;
     int numOfLanguages;
     QList<Flashcard> cards;
-    unsigned int keyIndex;
+    int keyIndex;
 };
 
 #endif // DECK_H

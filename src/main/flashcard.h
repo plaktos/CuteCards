@@ -62,7 +62,7 @@ struct Flashcard{
     QString operator[](const int i)  const              { return words.at(i); }
 
     inline
-    size_t size() const                                 { return words.size(); }
+    int size() const                                    { return words.size(); }
 
     inline
     bool empty() const                                  { return words.size() == 0 ? true : false;}

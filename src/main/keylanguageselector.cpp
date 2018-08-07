@@ -71,4 +71,5 @@ KeyLanguageSelector::getKeyLanguageIndex(){
         if(radioButtons[i]->isChecked() == true)
             return i;
     }
+    return 0;
 }

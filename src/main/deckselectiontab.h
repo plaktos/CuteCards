@@ -65,7 +65,7 @@ public slots:
     // Shuffles the deck.
     // Sets the key language based on the argument keylangindex
     // and emits an ExamToStartWithDeck signal.
-    void StartExam(int keylangindex);
+    void StartExam(unsigned int keylangindex);
 
 private:
     void ShuffleExamDeck();

@@ -89,7 +89,6 @@ DeckScrollListEntry::paintEvent(QPaintEvent *event){
         setPalette(pal);
 
     }
-    update();
 }
 
 void

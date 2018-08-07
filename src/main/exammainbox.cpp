@@ -102,15 +102,12 @@ ExamMainBox::RevealCard(){
 
 void
 ExamMainBox::resetLowerBox(){
-    if(!(lowerBox == nullptr))
-        delete lowerBox;
-
-    lowerBox = new ExamLowerBox(restWordsList);
+    lowerBox.reset(new ExamLowerBox(restWordsList));
     lowerBox->setMaximumHeight(height()/2);
 
-    mainLayout->insertWidget(mainLayout->count()-1 ,lowerBox);
+    mainLayout->insertWidget(mainLayout->count()-1 ,lowerBox.get());
     connect(this, SIGNAL(toRevealCard()),
-            lowerBox, SLOT(RevealWords()));
+            lowerBox.get(), SLOT(RevealWords()));
 }
 
 void

@@ -124,10 +124,8 @@ private:
     void unlockLanguages();
 
     QVBoxLayout *mainLayout;
-
     QList<DeckScrollListEntry *> scrollListEntries;
 
-    bool selectionActive;
     // A map to keep track of entries that match the search,
     // we search within this to see which ones are selected.
     // in index - bool fashion. Initially all of them are set to 1,
@@ -139,8 +137,10 @@ private:
     // Contains indexes of entries that are matched by language.
     QMap<int, bool> languageMatchedEntries;
 
-    bool languageLockMode;
-    bool emptyTitleSearch;
+    bool selectionActive = 0;
+    bool languageLockMode = 0;
+    bool emptyTitleSearch = 1;
+
 
 };
 
