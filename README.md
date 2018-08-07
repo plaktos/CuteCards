@@ -8,14 +8,15 @@ These can be created by hand in the Deck Editor or imported from CSV with minor 
 
 <img src="screenshot.png" width="500" height="300">
 
-**Release-v0.1.2:**
+**Release-v0.1.3:**
 ***
-https://github.com/plaktos/CuteCards/releases/tag/v0.1.2
+https://github.com/plaktos/CuteCards/releases/tag/v0.1.3
 
   * Load decks from ./decks
   * Create decks in Deck Editor by hand
   * Create decks from CSV files
   * Select decks in the Deck Selector
+  * Search for decks by name or language
   * Start an exam with the decks selected in Deck Selector
   * Select the key language (this determines which word is shown first)
   * Hotkeys:
